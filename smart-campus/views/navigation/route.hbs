@@ -1,0 +1,157 @@
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+        <h1>Directions to College</h1>
+        <a href="/navigation/map" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Map
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- Route Form -->
+        <div class="card">
+            <h3>Get Directions</h3>
+            <form action="/navigation/directions" method="GET">
+                <div class="form-group">
+                    <label class="form-label">Starting Location</label>
+                    <input type="text" name="origin" class="form-control" placeholder="Enter your current location" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Destination</label>
+                    <select name="destination" class="form-control" required>
+                        <option value="">Select Destination</option>
+                        <option value="main_gate" selected>Main Gate</option>
+                        <option value="library">Library</option>
+                        <option value="cafeteria">Cafeteria</option>
+                        <option value="admin_block">Administration Block</option>
+                        <option value="sports_complex">Sports Complex</option>
+                        <option value="hostel">Hostel</option>
+                        {{#each buildings}}
+                        <option value="{{code}}">{{name}} ({{code}})</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Transport Mode</label>
+                    <select name="mode" class="form-control">
+                        <option value="driving">Driving</option>
+                        <option value="walking">Walking</option>
+                        <option value="bicycling">Bicycling</option>
+                        <option value="transit">Public Transport</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-route"></i> Get Directions
+                </button>
+            </form>
+        </div>
+
+        <!-- Route Information -->
+        <div class="card">
+            <h3>Route Information</h3>
+            {{#if route}}
+            <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4>From: {{route.origin}}</h4>
+                <h4>To: {{route.destination}}</h4>
+                
+                <div style="margin: 1.5rem 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span><i class="fas fa-road"></i> Distance:</span>
+                        <strong>{{route.distance}}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                        <span><i class="fas fa-clock"></i> Duration:</span>
+                        <strong>{{route.duration}}</strong>
+                    </div>
+                </div>
+
+                <div style="margin: 1.5rem 0;">
+                    <h5>Directions:</h5>
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        {{#each route.steps}}
+                        <div style="padding: 0.5rem; border-bottom: 1px solid #eee;">
+                            <span style="color: #007bff; font-weight: bold;">{{add @index 1}}.</span>
+                            {{this}}
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div style="text-align: center; padding: 2rem;">
+                <i class="fas fa-route" style="font-size: 3rem; color: #6c757d;"></i>
+                <p>Enter your starting location to get directions</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- Campus Location -->
+    <div class="card">
+        <h3>Campus Location</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h4>📍 Main Address</h4>
+                <p style="color: #555;">
+                    Smart Campus University<br>
+                    123 College Road<br>
+                    Education District<br>
+                    City, State 123456<br>
+                    India
+                </p>
+                
+                <h4 style="margin-top: 1.5rem;">📞 Contact</h4>
+                <p style="color: #555;">
+                    Phone: +91-123-456-7890<br>
+                    Email: info@smartcampus.edu<br>
+                    Website: www.smartcampus.edu
+                </p>
+            </div>
+
+            <div>
+                <h4>🕒 Office Hours</h4>
+                <p style="color: #555;">
+                    Monday - Friday: 8:00 AM - 6:00 PM<br>
+                    Saturday: 9:00 AM - 4:00 PM<br>
+                    Sunday: Closed
+                </p>
+
+                <h4 style="margin-top: 1.5rem;">🚗 Parking</h4>
+                <p style="color: #555;">
+                    Visitor parking available at Main Gate<br>
+                    Student parking near Hostel Block<br>
+                    Faculty parking near Admin Block
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transportation Options -->
+    <div class="card" style="margin-top: 2rem;">
+        <h3>Transportation Options</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="text-align: center; padding: 1rem; background: #e7f3ff; border-radius: 5px;">
+                <i class="fas fa-bus" style="font-size: 2rem; color: #007bff;"></i>
+                <h4>Public Transport</h4>
+                <p style="color: #555; font-size: 0.9em;">Bus routes 101, 202, 303 stop at campus gate</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #e7f8e7; border-radius: 5px;">
+                <i class="fas fa-subway" style="font-size: 2rem; color: #28a745;"></i>
+                <h4>Metro</h4>
+                <p style="color: #555; font-size: 0.9em;">Nearest station: College Metro (500m)</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 5px;">
+                <i class="fas fa-taxi" style="font-size: 2rem; color: #fd7e14;"></i>
+                <h4>Taxi/Cab</h4>
+                <p style="color: #555; font-size: 0.9em;">Available at all gates, 24/7 service</p>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #f8d7da; border-radius: 5px;">
+                <i class="fas fa-bicycle" style="font-size: 2rem; color: #dc3545;"></i>
+                <h4>Bicycle</h4>
+                <p style="color: #555; font-size: 0.9em;">Bike racks available at all buildings</p>
+            </div>
+        </div>
+    </div>
+</div>

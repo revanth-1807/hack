@@ -1,0 +1,113 @@
+<div class="card">
+    <h1>Edit Inventory Item: {{item.name}}</h1>
+
+    <form action="/admin/cafe/inventory/update/{{item._id}}" method="POST">
+        <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" name="name" class="form-control" value="{{item.name}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="2">{{item.description}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control" required>
+                    <option value="food" {{#if (eq item.category 'food')}}selected{{/if}}>Food</option>
+                    <option value="beverage" {{#if (eq item.category 'beverage')}}selected{{/if}}>Beverage</option>
+                    <option value="supplies" {{#if (eq item.category 'supplies')}}selected{{/if}}>Supplies</option>
+                    <option value="equipment" {{#if (eq item.category 'equipment')}}selected{{/if}}>Equipment</option>
+                    <option value="cleaning" {{#if (eq item.category 'cleaning')}}selected{{/if}}>Cleaning Supplies</option>
+                    <option value="packaging" {{#if (eq item.category 'packaging')}}selected{{/if}}>Packaging</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Unit</label>
+                <select name="unit" class="form-control" required>
+                    <option value="pieces" {{#if (eq item.unit 'pieces')}}selected{{/if}}>Pieces</option>
+                    <option value="kg" {{#if (eq item.unit 'kg')}}selected{{/if}}>Kilograms</option>
+                    <option value="grams" {{#if (eq item.unit 'grams')}}selected{{/if}}>Grams</option>
+                    <option value="liters" {{#if (eq item.unit 'liters')}}selected{{/if}}>Liters</option>
+                    <option value="ml" {{#if (eq item.unit 'ml')}}selected{{/if}}>Milliliters</option>
+                    <option value="pack" {{#if (eq item.unit 'pack')}}selected{{/if}}>Packs</option>
+                    <option value="box" {{#if (eq item.unit 'box')}}selected{{/if}}>Boxes</option>
+                    <option value="bottle" {{#if (eq item.unit 'bottle')}}selected{{/if}}>Bottles</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Current Stock</label>
+                <input type="number" name="currentStock" class="form-control" min="0" value="{{item.currentStock}}" required>
+                <small class="form-text">Current quantity in inventory</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Minimum Stock Level</label>
+                <input type="number" name="minStock" class="form-control" min="1" value="{{item.minStock}}" required>
+                <small class="form-text">Alert when stock falls below this level</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Cost Price (₹)</label>
+                <input type="number" name="costPrice" class="form-control" step="0.01" min="0" value="{{item.costPrice}}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Supplier</label>
+                <input type="text" name="supplier" class="form-control" value="{{item.supplier}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Storage Location</label>
+            <input type="text" name="storageLocation" class="form-control" value="{{item.storageLocation}}" placeholder="e.g., Shelf A1, Refrigerator">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Expiry Date (if applicable)</label>
+            <input type="date" name="expiryDate" class="form-control" value="{{#if item.expiryDate}}{{formatDate item.expiryDate 'YYYY-MM-DD'}}{{/if}}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-control" rows="2" placeholder="Any additional information...">{{item.notes}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div>
+                <label style="margin-right: 2rem;">
+                    <input type="radio" name="isActive" value="true" {{#if item.isActive}}checked{{/if}}> Active
+                </label>
+                <label>
+                    <input type="radio" name="isActive" value="false" {{#unless item.isActive}}checked{{/unless}}> Inactive
+                </label>
+            </div>
+        </div>
+
+        <!-- Stock History (Read-only) -->
+        <div class="card" style="background: #f8f9fa; margin-bottom: 1rem;">
+            <h3>Stock History</h3>
+            <div style="color: #666;">
+                <div>Created: {{formatDate item.createdAt 'MMM DD, YYYY HH:mm'}}</div>
+                <div>Last Updated: {{formatDate item.updatedAt 'MMM DD, YYYY HH:mm'}}</div>
+                {{#if item.lastRestock}}
+                <div>Last Restock: {{formatDate item.lastRestock 'MMM DD, YYYY'}}</div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Update Inventory Item</button>
+            <a href="/admin/cafe/inventory" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

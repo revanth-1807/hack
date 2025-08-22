@@ -1,0 +1,143 @@
+<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+    <h1>Table Management</h1>
+    <div>
+        <a href="/admin/cafe" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="/admin/cafe/tables/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Table
+        </a>
+    </div>
+</div>
+
+{{#if tables.length}}
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+    {{#each tables}}
+    <div class="card table-card table-{{status}}" style="text-align: center;">
+        <div style="padding: 1.5rem;">
+            <i class="fas fa-chair" style="font-size: 3rem; 
+                {{#if (eq status 'available')}}color: #28a745;{{/if}}
+                {{#if (eq status 'occupied')}}color: #dc3545;{{/if}}
+                {{#if (eq status 'reserved')}}color: #fd7e14;{{/if}}
+                {{#if (eq status 'cleaning')}}color: #6c757d;{{/if}}
+            "></i>
+            
+            <h3 style="margin: 1rem 0 0.5rem 0;">Table {{tableNumber}}</h3>
+            
+            <div style="margin-bottom: 1rem;">
+                <span class="badge badge-{{#if (eq status 'available')}}success{{else if (eq status 'occupied')}}danger{{else if (eq status 'reserved')}}warning{{else}}secondary{{/if}}">
+                    {{status}}
+                </span>
+                <span class="badge badge-primary">{{capacity}} seats</span>
+            </div>
+
+            <p style="color: #666; margin-bottom: 1rem;">{{location}}</p>
+
+            {{#if (eq status 'occupied')}}
+            <div style="background: #f8d7da; padding: 0.5rem; border-radius: 5px; margin-bottom: 1rem;">
+                <small>Occupied since: {{formatDate occupiedSince 'HH:mm'}}</small>
+            </div>
+            {{/if}}
+
+            {{#if (eq status 'reserved')}}
+            <div style="background: #fff3cd; padding: 0.5rem; border-radius: 5px; margin-bottom: 1rem;">
+                <small>Reserved for: {{reservedFor}}</small>
+                <br>
+                <small>Time: {{formatDate reservedTime 'HH:mm'}}</small>
+            </div>
+            {{/if}}
+
+            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                {{#if (eq status 'available')}}
+                <form action="/admin/cafe/tables/update/{{_id}}" method="POST">
+                    <input type="hidden" name="status" value="occupied">
+                    <button type="submit" class="btn btn-danger btn-sm">Mark Occupied</button>
+                </form>
+                {{/if}}
+
+                {{#if (eq status 'occupied')}}
+                <form action="/admin/cafe/tables/update/{{_id}}" method="POST">
+                    <input type="hidden" name="status" value="available">
+                    <button type="submit" class="btn btn-success btn-sm">Mark Available</button>
+                </form>
+                {{/if}}
+
+                {{#if (eq status 'reserved')}}
+                <form action="/admin/cafe/tables/update/{{_id}}" method="POST">
+                    <input type="hidden" name="status" value="available">
+                    <button type="submit" class="btn btn-warning btn-sm">Cancel Reservation</button>
+                </form>
+                {{/if}}
+
+                {{#if (eq status 'cleaning')}}
+                <form action="/admin/cafe/tables/update/{{_id}}" method="POST">
+                    <input type="hidden" name="status" value="available">
+                    <button type="submit" class="btn btn-info btn-sm">Clean Complete</button>
+                </form>
+                {{/if}}
+
+                <a href="/admin/cafe/tables/edit/{{_id}}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-chair" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Tables Configured</h3>
+    <p>No tables have been added to the system yet.</p>
+    <a href="/admin/cafe/tables/create" class="btn btn-primary">Add First Table</a>
+</div>
+{{/if}}
+
+<!-- Table Statistics -->
+<div class="card" style="margin-top: 2rem;">
+    <h3>Table Statistics</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="text-align: center; padding: 1rem; background: #e7f3ff; border-radius: 5px;">
+            <i class="fas fa-chair" style="font-size: 2rem; color: #007bff;"></i>
+            <h4>Total Tables</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.totalTables}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #e7f8e7; border-radius: 5px;">
+            <i class="fas fa-check-circle" style="font-size: 2rem; color: #28a745;"></i>
+            <h4>Available</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.availableTables}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #f8d7da; border-radius: 5px;">
+            <i class="fas fa-users" style="font-size: 2rem; color: #dc3545;"></i>
+            <h4>Occupied</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.occupiedTables}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 5px;">
+            <i class="fas fa-calendar" style="font-size: 2rem; color: #fd7e14;"></i>
+            <h4>Reserved</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.reservedTables}}</div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table-card {
+    border-left: 4px solid;
+}
+
+.table-available {
+    border-left-color: #28a745;
+}
+
+.table-occupied {
+    border-left-color: #dc3545;
+}
+
+.table-reserved {
+    border-left-color: #fd7e14;
+}
+
+.table-cleaning {
+    border-left-color: #6c757d;
+}
+</style>

@@ -1,0 +1,56 @@
+<div class="card">
+    <h1>Report Found Item</h1>
+
+    <form action="/lostfound/report" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" name="itemName" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Found Date</label>
+                <input type="date" name="foundDate" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="books">Books & Stationery</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="documents">Documents</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Found Location</label>
+            <input type="text" name="foundLocation" class="form-control" required placeholder="e.g., Library, Cafeteria, Building A">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Item Image (optional)</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Contact Information</label>
+            <input type="text" name="contactInfo" class="form-control" required value="{{user.phone}}">
+            <small class="form-text">Phone number or email where you can be reached</small>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Report Item</button>
+            <a href="/lostfound" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,169 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Yearly Calendar Management</h1>
+    <a href="/calendar/create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New Event
+    </a>
+</div>
+
+<!-- Year Selection -->
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <label for="yearSelect" style="font-weight: bold;">Select Year:</label>
+        <select id="yearSelect" class="form-control" style="width: 120px;" onchange="changeYear(this.value)">
+            {{#each availableYears}}
+                <option value="{{this}}" {{#if (eq this ../currentYear)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+        </select>
+        <a href="/calendar" class="btn btn-secondary">
+            <i class="fas fa-calendar"></i> View Monthly Calendar
+        </a>
+    </div>
+</div>
+
+<!-- Yearly Calendar Grid -->
+<div class="card">
+    <h2 style="text-align: center; margin-bottom: 2rem;">{{currentYear}} Academic Calendar</h2>
+    
+    <div class="yearly-calendar-grid">
+        {{#each (range 1 12)}}
+            <div class="month-card">
+                <h3 style="background: #007bff; color: white; padding: 0.5rem; text-align: center; margin: 0;">
+                    {{getMonthName this}}
+                </h3>
+                <div class="month-events">
+                    {{#each (getEventsForMonth ../events this ../currentYear)}}
+                        <div class="event-item" style="border-left: 3px solid {{getEventColor type}};">
+                            <div style="font-weight: bold; font-size: 0.9rem;">{{title}}</div>
+                            <div style="font-size: 0.8rem; color: #666;">
+                                {{formatDate startDate}} {{#if (ne (formatDate startDate) (formatDate endDate))}}- {{formatDate endDate}}{{/if}}
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                <a href="/calendar/edit/{{_id}}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="/calendar/delete/{{_id}}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this event?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div style="text-align: center; color: #999; padding: 1rem;">
+                            No events scheduled
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+<style>
+.yearly-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.month-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.month-events {
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.event-item {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-left: 3px solid #007bff;
+}
+
+.event-item:last-child {
+    margin-bottom: 0;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+</style>
+
+<script>
+function changeYear(year) {
+    window.location.href = `/calendar/yearly?year=${year}`;
+}
+</script>
+
+<!-- Register Handlebars helpers -->
+<script>
+// Month names helper
+Handlebars.registerHelper('getMonthName', function(month) {
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month - 1];
+});
+
+// Get events for specific month helper
+Handlebars.registerHelper('getEventsForMonth', function(events, month, year) {
+    const targetMonth = parseInt(month);
+    const targetYear = parseInt(year);
+    
+    return events.filter(event => {
+        const eventDate = new Date(event.startDate);
+        return eventDate.getMonth() + 1 === targetMonth && eventDate.getFullYear() === targetYear;
+    });
+});
+
+// Event color helper
+Handlebars.registerHelper('getEventColor', function(type) {
+    const colors = {
+        'academic': '#007bff',
+        'holiday': '#28a745',
+        'exam': '#dc3545',
+        'event': '#ffc107',
+        'other': '#6c757d'
+    };
+    return colors[type] || '#6c757d';
+});
+
+// Range helper
+Handlebars.registerHelper('range', function(start, end) {
+    const result = [];
+    for (let i = start; i <= end; i++) {
+        result.push(i);
+    }
+    return result;
+});
+
+// Date format helper
+Handlebars.registerHelper('formatDate', function(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+});
+
+// Equality helper
+Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+});
+
+// Not equal helper
+Handlebars.registerHelper('ne', function(a, b) {
+    return a !== b;
+});
+</script>

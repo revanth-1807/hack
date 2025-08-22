@@ -1,0 +1,66 @@
+<div class="card event-card event-{{event.status}}">
+    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+        <h1>{{event.title}}</h1>
+        <span class="badge badge-{{#if (eq event.status 'upcoming')}}success{{else if (eq event.status 'ongoing')}}warning{{else}}info{{/if}}">
+            {{event.status}}
+        </span>
+    </div>
+
+    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">{{event.description}}</p>
+
+    <div class="row">
+        <div class="card">
+            <h3>Event Details</h3>
+            <p><strong>Date:</strong> {{formatDate event.date}}</p>
+            <p><strong>Time:</strong> {{event.time}}</p>
+            <p><strong>Venue:</strong> {{event.venue}}</p>
+            <p><strong>Organizer:</strong> {{event.organizer}}</p>
+            <p><strong>Category:</strong> {{event.category}}</p>
+            <p><strong>Participants:</strong> {{event.currentParticipants}}/{{event.maxParticipants}}</p>
+        </div>
+
+        <div class="card">
+            <h3>Registration</h3>
+            {{#if event.isRegistrationOpen}}
+                {{#if isRegistered}}
+                    <div class="badge badge-success">You are registered!</div>
+                    <form action="/events/cancel/{{event._id}}" method="POST" style="margin-top: 1rem;">
+                        <button type="submit" class="btn btn-danger">Cancel Registration</button>
+                    </form>
+                {{else}}
+                    {{#if (gt event.maxParticipants 0)}}
+                        {{#if (gte event.currentParticipants event.maxParticipants)}}
+                            <div class="badge badge-danger">Event Full</div>
+                        {{else}}
+                            <form action="/events/register/{{event._id}}" method="POST">
+                                <button type="submit" class="btn btn-primary">Register Now</button>
+                            </form>
+                        {{/if}}
+                    {{else}}
+                        <form action="/events/register/{{event._id}}" method="POST">
+                            <button type="submit" class="btn btn-primary">Register Now</button>
+                        </form>
+                    {{/if}}
+                {{/if}}
+            {{else}}
+                <div class="badge badge-secondary">Registration Closed</div>
+            {{/if}}
+
+            {{#if (eq user.role 'admin')}}
+            <div style="margin-top: 1rem;">
+                <a href="/events/edit/{{event._id}}" class="btn btn-secondary">Edit Event</a>
+                <form action="/events/delete/{{event._id}}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="/events" class="btn btn-secondary">Back to Events</a>
+        {{#if (eq user.role 'admin')}}
+        <a href="/events/create" class="btn btn-primary">Create New Event</a>
+        {{/if}}
+    </div>
+</div>

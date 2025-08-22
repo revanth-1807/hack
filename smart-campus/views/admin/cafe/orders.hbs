@@ -1,0 +1,141 @@
+<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+    <h1>Order Management</h1>
+    <div>
+        <a href="/admin/cafe" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="/cafeteria/orders" class="btn btn-info" target="_blank">
+            <i class="fas fa-eye"></i> View Customer Orders
+        </a>
+    </div>
+</div>
+
+<!-- Order Filter -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h3>Filter Orders</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/admin/cafe/orders" class="btn btn-outline-primary {{#unless status}}active{{/unless}}">
+            All Orders
+        </a>
+        <a href="/admin/cafe/orders?status=pending" class="btn btn-outline-warning {{#if (eq status 'pending')}}active{{/if}}">
+            Pending
+        </a>
+        <a href="/admin/cafe/orders?status=preparing" class="btn btn-outline-info {{#if (eq status 'preparing')}}active{{/if}}">
+            Preparing
+        </a>
+        <a href="/admin/cafe/orders?status=ready" class="btn btn-outline-success {{#if (eq status 'ready')}}active{{/if}}">
+            Ready
+        </a>
+        <a href="/admin/cafe/orders?status=completed" class="btn btn-outline-secondary {{#if (eq status 'completed')}}active{{/if}}">
+            Completed
+        </a>
+        <a href="/admin/cafe/orders?status=cancelled" class="btn btn-outline-danger {{#if (eq status 'cancelled')}}active{{/if}}">
+            Cancelled
+        </a>
+    </div>
+</div>
+
+{{#if orders.length}}
+<div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f8f9fa;">
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Order #</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Customer</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Items</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Amount</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Status</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Time</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orders}}
+            <tr {{#if (eq _id ../highlight)}}style="background: #fff3cd;"{{/if}}>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <strong>{{orderNumber}}</strong>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    {{user.name}}<br>
+                    <small style="color: #666;">{{user.email}}</small>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    {{#each items}}
+                    <div>{{this.name}} x {{this.quantity}}</div>
+                    {{/each}}
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <strong style="color: #28a745;">₹{{totalAmount}}</strong>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <span class="badge badge-{{#if (eq status 'pending')}}warning{{else if (eq status 'preparing')}}info{{else if (eq status 'ready')}}success{{else if (eq status 'completed')}}secondary{{else}}danger{{/if}}">
+                        {{status}}
+                    </span>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    {{formatDate createdAt 'HH:mm'}}<br>
+                    <small style="color: #666;">{{formatDate createdAt 'MMM DD'}}</small>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        {{#if (eq status 'pending')}}
+                        <form action="/admin/cafe/orders/update/{{_id}}" method="POST">
+                            <input type="hidden" name="status" value="preparing">
+                            <button type="submit" class="btn btn-info btn-sm btn-block">Start Preparing</button>
+                        </form>
+                        {{/if}}
+                        {{#if (eq status 'preparing')}}
+                        <form action="/admin/cafe/orders/update/{{_id}}" method="POST">
+                            <input type="hidden" name="status" value="ready">
+                            <button type="submit" class="btn btn-success btn-sm btn-block">Mark Ready</button>
+                        </form>
+                        {{/if}}
+                        {{#if (eq status 'ready')}}
+                        <form action="/admin/cafe/orders/update/{{_id}}" method="POST">
+                            <input type="hidden" name="status" value="completed">
+                            <button type="submit" class="btn btn-secondary btn-sm btn-block">Complete</button>
+                        </form>
+                        {{/if}}
+                        <a href="/cafeteria/orders/{{_id}}" class="btn btn-primary btn-sm btn-block" target="_blank">View Details</a>
+                    </div>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-receipt" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Orders Found</h3>
+    <p>No orders match the selected filter criteria.</p>
+    <a href="/admin/cafe/orders" class="btn btn-primary">View All Orders</a>
+</div>
+{{/if}}
+
+<!-- Order Statistics -->
+<div class="card" style="margin-top: 2rem;">
+    <h3>Order Statistics</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="text-align: center; padding: 1rem; background: #e7f3ff; border-radius: 5px;">
+            <i class="fas fa-receipt" style="font-size: 2rem; color: #007bff;"></i>
+            <h4>Total Orders</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.totalOrders}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 5px;">
+            <i class="fas fa-clock" style="font-size: 2rem; color: #fd7e14;"></i>
+            <h4>Pending</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.pendingOrders}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #e7f8e7; border-radius: 5px;">
+            <i class="fas fa-check-circle" style="font-size: 2rem; color: #28a745;"></i>
+            <h4>Completed</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.completedOrders}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #f8d7da; border-radius: 5px;">
+            <i class="fas fa-times-circle" style="font-size: 2rem; color: #dc3545;"></i>
+            <h4>Cancelled</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.cancelledOrders}}</div>
+        </div>
+    </div>
+</div>

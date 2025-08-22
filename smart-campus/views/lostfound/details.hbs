@@ -1,0 +1,70 @@
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+        <h1>{{item.itemName}}</h1>
+        <span class="badge badge-{{#if (eq item.status 'found')}}info{{else if (eq item.status 'claimed')}}success{{else}}warning{{/if}}">
+            {{item.status}}
+        </span>
+    </div>
+
+    <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+        {{#if item.image}}
+        <img src="/uploads/{{item.image}}" alt="{{item.itemName}}" style="width: 200px; height: 200px; object-fit: cover; border-radius: 8px;">
+        {{else}}
+        <div style="width: 200px; height: 200px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-question" style="font-size: 3rem; color: #999;"></i>
+        </div>
+        {{/if}}
+        
+        <div style="flex: 1;">
+            <h3>Item Details</h3>
+            <p><strong>Description:</strong> {{item.description}}</p>
+            <p><strong>Found Date:</strong> {{formatDate item.foundDate}}</p>
+            <p><strong>Location:</strong> {{item.foundLocation}}</p>
+            <p><strong>Category:</strong> {{item.category}}</p>
+            <p><strong>Reported By:</strong> {{item.reportedBy.name}}</p>
+            
+            {{#if item.claimedBy}}
+            <p><strong>Claimed By:</strong> {{item.claimedBy.name}}</p>
+            <p><strong>Claim Date:</strong> {{formatDate item.claimDate}}</p>
+            {{/if}}
+        </div>
+    </div>
+
+    {{#if (eq item.status 'found')}}
+    <div class="card" style="background: #f8f9fa; margin-bottom: 1rem;">
+        <h3>Claim This Item</h3>
+        <p>If this is your lost item, you can claim it by providing your contact information.</p>
+        <a href="/lostfound/claim/{{item._id}}" class="btn btn-primary">Claim Item</a>
+    </div>
+    {{/if}}
+
+    {{#if (eq user.role 'admin')}}
+    <div class="card" style="background: #fff3cd; margin-bottom: 1rem;">
+        <h3>Admin Actions</h3>
+        <div style="display: flex; gap: 1rem;">
+            {{#if (eq item.status 'found')}}
+            <form action="/lostfound/update-status/{{item._id}}" method="POST">
+                <input type="hidden" name="status" value="claimed">
+                <button type="submit" class="btn btn-success">Mark as Claimed</button>
+            </form>
+            {{/if}}
+            {{#if (eq item.status 'claimed')}}
+            <form action="/lostfound/update-status/{{item._id}}" method="POST">
+                <input type="hidden" name="status" value="found">
+                <button type="submit" class="btn btn-warning">Reopen Claim</button>
+            </form>
+            {{/if}}
+            <form action="/lostfound/delete/{{item._id}}" method="POST">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+        </div>
+    </div>
+    {{/if}}
+
+    <div style="margin-top: 2rem;">
+        <a href="/lostfound" class="btn btn-secondary">Back to Lost & Found</a>
+        {{#if (eq user._id item.reportedBy._id)}}
+        <a href="/lostfound/my/items" class="btn btn-info">My Reported Items</a>
+        {{/if}}
+    </div>
+</div>

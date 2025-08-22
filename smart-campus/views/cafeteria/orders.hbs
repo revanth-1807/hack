@@ -1,0 +1,99 @@
+<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+    <h1>My Orders</h1>
+    <div>
+        <a href="/cafeteria/menu" class="btn btn-primary">
+            <i class="fas fa-utensils"></i> Order Food
+        </a>
+        <a href="/cafeteria" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Cafeteria Home
+        </a>
+    </div>
+</div>
+
+{{#if orders.length}}
+<div class="row">
+    {{#each orders}}
+    <div class="card order-card order-{{status}}" style="width: 100%; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div>
+                <h3>Order #{{orderNumber}}</h3>
+                <p style="color: #666; margin: 0;">Placed on {{formatDate createdAt}}</p>
+            </div>
+            <div style="text-align: right;">
+                <span class="badge badge-{{#if (eq status 'pending')}}warning{{else if (eq status 'preparing')}}info{{else if (eq status 'ready')}}success{{else if (eq status 'completed')}}secondary{{else}}danger{{/if}}">
+                    {{status}}
+                </span>
+                <p style="margin: 0.5rem 0 0 0; font-weight: bold; color: #28a745;">₹{{totalAmount}}</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+            <h4>Items:</h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {{#each items}}
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>{{this.name}} x {{this.quantity}}</span>
+                        <span>₹{{this.price}}</span>
+                    </div>
+                    {{#if this.specialInstructions}}
+                    <small style="color: #666; font-style: italic;">Special: {{this.specialInstructions}}</small>
+                    {{/if}}
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                {{#if (eq status 'pending')}}
+                <form action="/cafeteria/orders/cancel/{{_id}}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this order?')">
+                        <i class="fas fa-times"></i> Cancel Order
+                    </button>
+                </form>
+                {{/if}}
+            </div>
+            <div>
+                <a href="/cafeteria/orders/{{_id}}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-receipt" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Orders Yet</h3>
+    <p>You haven't placed any orders yet.</p>
+    <a href="/cafeteria/menu" class="btn btn-primary">Place Your First Order</a>
+</div>
+{{/if}}
+
+<style>
+.order-card {
+    border-left: 4px solid;
+}
+
+.order-pending {
+    border-left-color: #ffc107;
+}
+
+.order-preparing {
+    border-left-color: #17a2b8;
+}
+
+.order-ready {
+    border-left-color: #28a745;
+}
+
+.order-completed {
+    border-left-color: #6c757d;
+}
+
+.order-cancelled {
+    border-left-color: #dc3545;
+}
+</style>

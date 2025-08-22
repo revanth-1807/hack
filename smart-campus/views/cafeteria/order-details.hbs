@@ -1,0 +1,94 @@
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem;">
+        <div>
+            <h1>Order #{{order.orderNumber}}</h1>
+            <p style="color: #666;">Placed on {{formatDate order.createdAt}}</p>
+        </div>
+        <div style="text-align: right;">
+            <span class="badge badge-{{#if (eq order.status 'pending')}}warning{{else if (eq order.status 'preparing')}}info{{else if (eq order.status 'ready')}}success{{else if (eq order.status 'completed')}}secondary{{else}}danger{{/if}} badge-lg">
+                {{order.status}}
+            </span>
+            <p style="margin: 0.5rem 0 0 0; font-size: 1.5rem; font-weight: bold; color: #28a745;">₹{{order.totalAmount}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Order Items -->
+        <div class="card" style="flex: 2;">
+            <h3>Order Items</h3>
+            <div style="border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                {{#each order.items}}
+                <div style="padding: 1rem; border-bottom: 1px solid #eee; {{#if @last}}border-bottom: none;{{/if}}">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 0.5rem 0;">{{this.name}}</h4>
+                            <p style="color: #666; margin: 0 0 0.5rem 0;">Quantity: {{this.quantity}}</p>
+                            {{#if this.specialInstructions}}
+                            <p style="color: #888; font-style: italic; margin: 0;">Special: {{this.specialInstructions}}</p>
+                            {{/if}}
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-weight: bold; color: #28a745; margin: 0;">₹{{this.price}}</p>
+                            <p style="color: #666; margin: 0.5rem 0 0 0;">₹{{multiply this.price this.quantity}} total</p>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="card" style="flex: 1;">
+            <h3>Order Summary</h3>
+            <div style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Subtotal:</span>
+                    <span>₹{{order.totalAmount}}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Tax (5%):</span>
+                    <span>₹{{multiply order.totalAmount 0.05}}</span>
+                </div>
+                <hr>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem;">
+                    <span>Total:</span>
+                    <span>₹{{add order.totalAmount (multiply order.totalAmount 0.05)}}</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4>Order Status Timeline</h4>
+                <div style="font-size: 0.9rem; color: #666;">
+                    <div>📅 Created: {{formatDate order.createdAt}}</div>
+                    {{#if order.updatedAt}}
+                    <div>🔄 Last Updated: {{formatDate order.updatedAt}}</div>
+                    {{/if}}
+                </div>
+            </div>
+
+            {{#if (eq order.status 'pending')}}
+            <form action="/cafeteria/orders/cancel/{{order._id}}" method="POST">
+                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Are you sure you want to cancel this order?')">
+                    <i class="fas fa-times"></i> Cancel Order
+                </button>
+            </form>
+            {{/if}}
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <a href="/cafeteria/orders" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        <a href="/cafeteria/menu" class="btn btn-primary">
+            <i class="fas fa-utensils"></i> Order Again
+        </a>
+    </div>
+</div>
+
+<style>
+.badge-lg {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+</style>

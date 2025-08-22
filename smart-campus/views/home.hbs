@@ -1,0 +1,100 @@
+<section style="padding: 3rem 0; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #333;">
+            Welcome to Smart Campus
+        </h1>
+        <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+            Your platform for campus navigation and wayfinding.
+        </p>
+        
+        {{#unless user}}
+        <!-- Quick Navigation for Visitors -->
+        <div style="margin-bottom: 3rem;">
+            <h3 style="margin-bottom: 1rem; color: #333;">Quick Navigation</h3>
+            <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/navigation/map" class="btn btn-outline-warning">
+                    <i class="fas fa-map"></i> Campus Navigation
+                </a>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem;">
+            <a href="/auth/register" class="btn btn-primary" style="padding: 1rem 2rem;">
+                <i class="fas fa-user-plus"></i> Get Started
+            </a>
+            <a href="/auth/login" class="btn btn-secondary" style="padding: 1rem 2rem;">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+        {{/unless}}
+
+        <!-- Features Grid - Only Navigation -->
+        <div class="row" style="margin-top: 3rem; justify-content: center;">
+            <div class="card" style="max-width: 400px;">
+                <div style="font-size: 3rem; color: #ffc107; margin-bottom: 1rem;">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3>Campus Navigation</h3>
+                <p>Find your way around campus with interactive maps and directions. Locate buildings, classrooms, and facilities with ease.</p>
+                <a href="/navigation/map" class="btn btn-warning">Explore Campus</a>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        {{#if user}}
+        <div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 10px;">
+            <h2 style="margin-bottom: 2rem;">Campus Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Buildings Mapped</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2,500+</div>
+                    <div class="stat-label">Students Served</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Navigation Available</div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Testimonials -->
+        <div style="margin-top: 3rem;">
+            <h2 style="margin-bottom: 2rem;">What Students Say</h2>
+            <div class="row" style="justify-content: center;">
+                <div class="card" style="max-width: 400px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 1rem;">
+                            JS
+                        </div>
+                        <div>
+                            <strong>Jeswanth Nukelli</strong>
+                            <p style="color: #666; margin: 0;">Business Admin</p>
+                        </div>
+                    </div>
+                    <p>"The campus navigation system is amazing! I can easily find any building on campus without getting lost."</p>
+                </div>
+
+                <div class="card" style="max-width: 400px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <div style="width: 50px; height: 50px; background: #ffc107; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 1rem;">
+                            MD
+                        </div>
+                        <div>
+                            <strong>Revanth Surisetti</strong>
+                            <p style="color: #666; margin: 0;">Engineering</p>
+                        </div>
+                    </div>
+                    <p>"As a new student, the navigation feature helped me tremendously to find my classes during the first week!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

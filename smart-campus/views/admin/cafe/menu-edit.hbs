@@ -1,0 +1,85 @@
+<div class="card">
+    <h1>Edit Menu Item</h1>
+
+    <form action="/admin/cafe/menu/update/{{item._id}}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">Item Name</label>
+            <input type="text" name="name" class="form-control" value="{{item.name}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3" required>{{item.description}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control" required>
+                    <option value="main course" {{#if (eq item.category 'main course')}}selected{{/if}}>Main Course</option>
+                    <option value="appetizer" {{#if (eq item.category 'appetizer')}}selected{{/if}}>Appetizer</option>
+                    <option value="dessert" {{#if (eq item.category 'dessert')}}selected{{/if}}>Dessert</option>
+                    <option value="beverage" {{#if (eq item.category 'beverage')}}selected{{/if}}>Beverage</option>
+                    <option value="snack" {{#if (eq item.category 'snack')}}selected{{/if}}>Snack</option>
+                    <option value="salad" {{#if (eq item.category 'salad')}}selected{{/if}}>Salad</option>
+                    <option value="soup" {{#if (eq item.category 'soup')}}selected{{/if}}>Soup</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Price (₹)</label>
+                <input type="number" name="price" class="form-control" step="0.01" min="0" value="{{item.price}}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Ingredients (comma-separated)</label>
+            <textarea name="ingredients" class="form-control" rows="2">{{#if item.ingredients}}{{item.ingredients}}{{/if}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Current Image</label>
+            {{#if item.image}}
+            <div style="margin-bottom: 1rem;">
+                <img src="/uploads/{{item.image}}" alt="{{item.name}}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px;">
+                <br>
+                <small>Current image</small>
+            </div>
+            {{else}}
+            <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px; text-align: center;">
+                <i class="fas fa-image" style="font-size: 2rem; color: #6c757d;"></i>
+                <p>No image uploaded</p>
+            </div>
+            {{/if}}
+            <input type="file" name="image" class="form-control" accept="image/*">
+            <small class="form-text">Upload a new image to replace the current one</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Availability</label>
+            <div>
+                <label style="margin-right: 2rem;">
+                    <input type="radio" name="isAvailable" value="true" {{#if item.isAvailable}}checked{{/if}}> Available
+                </label>
+                <label>
+                    <input type="radio" name="isAvailable" value="false" {{#unless item.isAvailable}}checked{{/unless}}> Out of Stock
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Preparation Time (minutes)</label>
+            <input type="number" name="preparationTime" class="form-control" min="1" value="{{item.preparationTime}}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Calories (optional)</label>
+            <input type="number" name="calories" class="form-control" min="0" value="{{item.calories}}">
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Update Menu Item</button>
+            <a href="/admin/cafe/menu" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

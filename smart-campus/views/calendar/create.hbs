@@ -1,0 +1,63 @@
+<div class="card">
+    <h1>Add Calendar Event</h1>
+
+    <form action="/calendar/create" method="POST">
+        <div class="form-group">
+            <label class="form-label">Event Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Event Type</label>
+                <select name="type" class="form-control" required>
+                    <option value="">Select Type</option>
+                    <option value="academic">Academic</option>
+                    <option value="holiday">Holiday</option>
+                    <option value="exam">Exam</option>
+                    <option value="event">Campus Event</option>
+                    <option value="deadline">Deadline</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Start Time (optional)</label>
+            <input type="time" name="startTime" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">End Time (optional)</label>
+            <input type="time" name="endTime" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Location (optional)</label>
+            <input type="text" name="location" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select name="priority" class="form-control">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Add Event</button>
+            <a href="/calendar" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

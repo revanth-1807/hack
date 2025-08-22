@@ -1,0 +1,99 @@
+<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+    <h1>Cafeteria Admin Dashboard</h1>
+    <a href="/cafeteria" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Cafeteria
+    </a>
+</div>
+
+<div class="row">
+    <!-- Quick Stats -->
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        <h3>Total Orders</h3>
+        <div style="font-size: 2.5rem; color: #007bff; font-weight: bold;">{{stats.totalOrders}}</div>
+        <p style="color: #666;">Today: {{stats.todayOrders}}</p>
+    </div>
+
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        <h3>Active Orders</h3>
+        <div style="font-size: 2.5rem; color: #28a745; font-weight: bold;">{{stats.activeOrders}}</div>
+        <p style="color: #666;">Pending: {{stats.pendingOrders}}</p>
+    </div>
+
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        <h3>Revenue</h3>
+        <div style="font-size: 2.5rem; color: #fd7e14; font-weight: bold;">₹{{stats.totalRevenue}}</div>
+        <p style="color: #666;">Today: ₹{{stats.todayRevenue}}</p>
+    </div>
+
+    <div class="card" style="flex: 1; min-width: 200px; text-align: center;">
+        <h3>Low Stock</h3>
+        <div style="font-size: 2.5rem; color: #dc3545; font-weight: bold;">{{stats.lowStockItems}}</div>
+        <p style="color: #666;">Items need restocking</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card" style="margin: 2rem 0;">
+    <h2>Quick Actions</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <a href="/admin/cafe/menu" class="btn btn-primary">
+            <i class="fas fa-utensils"></i> Manage Menu
+        </a>
+        <a href="/admin/cafe/orders" class="btn btn-info">
+            <i class="fas fa-receipt"></i> Manage Orders
+        </a>
+        <a href="/admin/cafe/tables" class="btn btn-warning">
+            <i class="fas fa-chair"></i> Manage Tables
+        </a>
+        <a href="/admin/cafe/inventory" class="btn btn-success">
+            <i class="fas fa-boxes"></i> Manage Inventory
+        </a>
+        <a href="/admin/cafe/reports" class="btn btn-secondary">
+            <i class="fas fa-chart-bar"></i> View Reports
+        </a>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="card">
+    <h2>Recent Orders</h2>
+    {{#if recentOrders.length}}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f8f9fa;">
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Order #</th>
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Customer</th>
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Amount</th>
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Status</th>
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Time</th>
+                    <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each recentOrders}}
+                <tr>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">{{orderNumber}}</td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">{{user.name}}</td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">₹{{totalAmount}}</td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                        <span class="badge badge-{{#if (eq status 'pending')}}warning{{else if (eq status 'preparing')}}info{{else if (eq status 'ready')}}success{{else}}secondary{{/if}}">
+                            {{status}}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">{{formatDate createdAt 'HH:mm'}}</td>
+                    <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                        <a href="/admin/cafe/orders?highlight={{_id}}" class="btn btn-primary btn-sm">View</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+    <div style="text-align: center; padding: 2rem;">
+        <i class="fas fa-receipt" style="font-size: 3rem; color: #6c757d;"></i>
+        <p>No recent orders</p>
+    </div>
+    {{/if}}
+</div>

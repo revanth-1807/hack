@@ -1,0 +1,47 @@
+<h1>My Registered Events</h1>
+
+{{#if registrations.length}}
+<div class="row">
+    {{#each registrations}}
+    <div class="card event-card event-{{this.event.status}}">
+        <h3>{{this.event.title}}</h3>
+        <p>{{this.event.description}}</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <div>
+                <strong>Date:</strong> {{formatDate this.event.date}} at {{this.event.time}}<br>
+                <strong>Venue:</strong> {{this.event.venue}}<br>
+                <strong>Status:</strong> 
+                <span class="badge badge-{{#if (eq this.event.status 'upcoming')}}success{{else if (eq this.event.status 'ongoing')}}warning{{else}}info{{/if}}">
+                    {{this.event.status}}
+                </span>
+            </div>
+            <div style="text-align: right;">
+                <strong>Registration Date:</strong><br>
+                {{formatDate this.registrationDate}}
+            </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+            <a href="/events/{{this.event._id}}" class="btn btn-primary">View Details</a>
+            {{#if (eq this.event.status 'upcoming')}}
+            <form action="/events/cancel/{{this.event._id}}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your registration?')">Cancel Registration</button>
+            </form>
+            {{/if}}
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-calendar-check" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Registered Events</h3>
+    <p>You haven't registered for any events yet.</p>
+    <a href="/events" class="btn btn-primary">Browse Events</a>
+</div>
+{{/if}}
+
+<div style="margin-top: 2rem;">
+    <a href="/events" class="btn btn-secondary">Back to All Events</a>
+</div>

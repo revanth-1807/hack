@@ -1,0 +1,117 @@
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 2rem;">
+        <div>
+            <h1>{{building.name}}</h1>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+                <span class="badge badge-primary">{{building.code}}</span>
+                <span class="badge badge-secondary">{{building.type}}</span>
+            </div>
+        </div>
+        <a href="/navigation/map" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Map
+        </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- Building Image -->
+        <div>
+            {{#if building.image}}
+            <img src="/uploads/{{building.image}}" alt="{{building.name}}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px;">
+            {{else}}
+            <div style="height: 300px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-building" style="font-size: 4rem; color: #007bff;"></i>
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Building Details -->
+        <div>
+            <h3>Building Information</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <strong>Building Code:</strong><br>
+                    <span class="badge badge-primary">{{building.code}}</span>
+                </div>
+                <div>
+                    <strong>Building Type:</strong><br>
+                    <span class="badge badge-secondary">{{building.type}}</span>
+                </div>
+                <div>
+                    <strong>Floors:</strong><br>
+                    <span>{{building.floors}} floors</span>
+                </div>
+                <div>
+                    <strong>Year Built:</strong><br>
+                    <span>{{building.yearBuilt}}</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <strong>Description:</strong>
+                <p style="color: #555; line-height: 1.6;">{{building.description}}</p>
+            </div>
+
+            {{#if building.facilities.length}}
+            <div>
+                <strong>Facilities:</strong>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                    {{#each building.facilities}}
+                    <span class="badge badge-info">{{this}}</span>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <!-- Departments and Offices -->
+    {{#if building.departments.length}}
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>Departments & Offices</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            {{#each building.departments}}
+            <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4 style="margin: 0 0 0.5rem 0;">{{name}}</h4>
+                <p style="color: #666; margin: 0 0 0.5rem 0;">Floor: {{floor}}, Room: {{room}}</p>
+                <p style="color: #888; margin: 0; font-size: 0.9em;">{{description}}</p>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+
+    <!-- Contact Information -->
+    <div class="card">
+        <h3>Contact Information</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div>
+                <strong>📍 Address:</strong>
+                <p style="color: #555; margin: 0.5rem 0;">{{building.address}}</p>
+            </div>
+            <div>
+                <strong>📞 Phone:</strong>
+                <p style="color: #555; margin: 0.5rem 0;">{{building.contact.phone}}</p>
+            </div>
+            <div>
+                <strong>📧 Email:</strong>
+                <p style="color: #555; margin: 0.5rem 0;">{{building.contact.email}}</p>
+            </div>
+            <div>
+                <strong>🕒 Hours:</strong>
+                <p style="color: #555; margin: 0.5rem 0;">{{building.hours}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Actions -->
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <a href="/navigation/route?destination={{building.code}}" class="btn btn-primary">
+            <i class="fas fa-route"></i> Get Directions
+        </a>
+        {{#if (eq user.role 'admin')}}
+        <a href="/navigation/admin/buildings/edit/{{building._id}}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit Building
+        </a>
+        {{/if}}
+    </div>
+</div>

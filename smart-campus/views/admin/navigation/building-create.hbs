@@ -1,0 +1,169 @@
+<div class="card">
+    <h1>Add New Building</h1>
+
+    <form action="/navigation/admin/buildings/create" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">Building Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Building Code</label>
+            <input type="text" name="code" class="form-control" required placeholder="e.g., MAIN, LIB, CAFE">
+            <small class="form-text">Unique code for the building (3-5 letters)</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Building Type</label>
+                <select name="type" class="form-control" required>
+                    <option value="">Select Type</option>
+                    <option value="academic">Academic</option>
+                    <option value="administrative">Administrative</option>
+                    <option value="recreational">Recreational</option>
+                    <option value="residential">Residential</option>
+                    <option value="library">Library</option>
+                    <option value="cafeteria">Cafeteria</option>
+                    <option value="sports">Sports Complex</option>
+                    <option value="hostel">Hostel</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Number of Floors</label>
+                <input type="number" name="floors" class="form-control" min="1" value="1" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Year Built</label>
+            <input type="number" name="yearBuilt" class="form-control" min="1900" max="2030" value="2023">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Facilities (comma-separated)</label>
+            <textarea name="facilities" class="form-control" rows="2" placeholder="e.g., WiFi, AC, Projector, Lab"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Building Image</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Contact Phone</label>
+                <input type="tel" name="contactPhone" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contact Email</label>
+                <input type="email" name="contactEmail" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Operating Hours</label>
+            <input type="text" name="hours" class="form-control" placeholder="e.g., 8:00 AM - 6:00 PM" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div>
+                <label style="margin-right: 2rem;">
+                    <input type="radio" name="isActive" value="true" checked> Active
+                </label>
+                <label>
+                    <input type="radio" name="isActive" value="false"> Inactive
+                </label>
+            </div>
+        </div>
+
+        <!-- Departments Section -->
+        <div class="card" style="background: #f8f9fa; margin-bottom: 1rem;">
+            <h3>Departments & Offices (Optional)</h3>
+            <div id="departments-container">
+                <div class="department-entry" style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ddd; border-radius: 5px;">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">Department Name</label>
+                            <input type="text" name="departments[0][name]" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Floor</label>
+                            <input type="number" name="departments[0][floor]" class="form-control" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Room Number</label>
+                            <input type="text" name="departments[0][room]" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="departments[0][description]" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addDepartment()">
+                <i class="fas fa-plus"></i> Add Another Department
+            </button>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Add Building</button>
+            <a href="/navigation/admin/buildings" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+let departmentCount = 1;
+
+function addDepartment() {
+    const container = document.getElementById('departments-container');
+    const newDepartment = document.createElement('div');
+    newDepartment.className = 'department-entry';
+    newDepartment.style.marginBottom = '1rem';
+    newDepartment.style.padding = '1rem';
+    newDepartment.style.border = '1px solid #ddd';
+    newDepartment.style.borderRadius = '5px';
+    
+    newDepartment.innerHTML = `
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Department Name</label>
+                <input type="text" name="departments[${departmentCount}][name]" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Floor</label>
+                <input type="number" name="departments[${departmentCount}][floor]" class="form-control" min="1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Room Number</label>
+                <input type="text" name="departments[${departmentCount}][room]" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="departments[${departmentCount}][description]" class="form-control" rows="2"></textarea>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">
+            <i class="fas fa-trash"></i> Remove
+        </button>
+    `;
+    
+    container.appendChild(newDepartment);
+    departmentCount++;
+}
+</script>

@@ -1,0 +1,110 @@
+<div class="card">
+    <h1>Edit Building: {{building.name}}</h1>
+
+    <form action="/navigation/admin/buildings/update/{{building._id}}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label">Building Name</label>
+            <input type="text" name="name" class="form-control" value="{{building.name}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Building Code</label>
+            <input type="text" name="code" class="form-control" value="{{building.code}}" required>
+            <small class="form-text">Unique code for the building (3-5 letters)</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3" required>{{building.description}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Building Type</label>
+                <select name="type" class="form-control" required>
+                    <option value="academic" {{#if (eq building.type 'academic')}}selected{{/if}}>Academic</option>
+                    <option value="administrative" {{#if (eq building.type 'administrative')}}selected{{/if}}>Administrative</option>
+                    <option value="recreational" {{#if (eq building.type 'recreational')}}selected{{/if}}>Recreational</option>
+                    <option value="residential" {{#if (eq building.type 'residential')}}selected{{/if}}>Residential</option>
+                    <option value="library" {{#if (eq building.type 'library')}}selected{{/if}}>Library</option>
+                    <option value="cafeteria" {{#if (eq building.type 'cafeteria')}}selected{{/if}}>Cafeteria</option>
+                    <option value="sports" {{#if (eq building.type 'sports')}}selected{{/if}}>Sports Complex</option>
+                    <option value="hostel" {{#if (eq building.type 'hostel')}}selected{{/if}}>Hostel</option>
+                    <option value="other" {{#if (eq building.type 'other')}}selected{{/if}}>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Number of Floors</label>
+                <input type="number" name="floors" class="form-control" min="1" value="{{building.floors}}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Year Built</label>
+            <input type="number" name="yearBuilt" class="form-control" min="1900" max="2030" value="{{building.yearBuilt}}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Facilities (comma-separated)</label>
+            <textarea name="facilities" class="form-control" rows="2">{{#if building.facilities}}{{building.facilities}}{{/if}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Current Image</label>
+            {{#if building.image}}
+            <div style="margin-bottom: 1rem;">
+                <img src="/uploads/{{building.image}}" alt="{{building.name}}" style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px;">
+                <br>
+                <small>Current image</small>
+            </div>
+            {{else}}
+            <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px; text-align: center;">
+                <i class="fas fa-image" style="font-size: 2rem; color: #6c757d;"></i>
+                <p>No image uploaded</p>
+            </div>
+            {{/if}}
+            <input type="file" name="image" class="form-control" accept="image/*">
+            <small class="form-text">Upload a new image to replace the current one</small>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-control" rows="2" required>{{building.address}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Contact Phone</label>
+                <input type="tel" name="contactPhone" class="form-control" value="{{building.contact.phone}}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contact Email</label>
+                <input type="email" name="contactEmail" class="form-control" value="{{building.contact.email}}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Operating Hours</label>
+            <input type="text" name="hours" class="form-control" value="{{building.hours}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div>
+                <label style="margin-right: 2rem;">
+                    <input type="radio" name="isActive" value="true" {{#if building.isActive}}checked{{/if}}> Active
+                </label>
+                <label>
+                    <input type="radio" name="isActive" value="false" {{#unless building.isActive}}checked{{/unless}}> Inactive
+                </label>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Update Building</button>
+            <a href="/navigation/admin/buildings" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

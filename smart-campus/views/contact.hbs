@@ -1,0 +1,159 @@
+<div class="card">
+    <h1>Contact Us</h1>
+    
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <i class="fas fa-headset" style="font-size: 4rem; color: #007bff;"></i>
+        <h2>Get in Touch</h2>
+        <p>We're here to help with any questions about Smart Campus</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <!-- Contact Information -->
+        <div class="card" style="background: #f8f9fa;">
+            <h3><i class="fas fa-info-circle" style="color: #007bff;"></i> Contact Information</h3>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4><i class="fas fa-map-marker-alt" style="color: #dc3545;"></i> Address</h4>
+                <p>Smart Campus Support<br>
+                Campus Technology Center<br>
+                University Campus<br>
+                City, State 12345</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4><i class="fas fa-phone" style="color: #28a745;"></i> Phone</h4>
+                <p>+1 (555) 123-4567<br>
+                Mon-Fri: 9:00 AM - 6:00 PM</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4><i class="fas fa-envelope" style="color: #fd7e14;"></i> Email</h4>
+                <p>support@smartcampus.edu<br>
+                info@smartcampus.edu</p>
+            </div>
+
+            <div>
+                <h4><i class="fas fa-clock" style="color: #6f42c1;"></i> Support Hours</h4>
+                <p>Monday - Friday: 8:00 AM - 8:00 PM<br>
+                Saturday: 9:00 AM - 5:00 PM<br>
+                Sunday: Closed</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="card">
+            <h3><i class="fas fa-paper-plane" style="color: #20c997;"></i> Send us a Message</h3>
+            
+            <form action="/contact" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <select name="subject" class="form-control" required>
+                        <option value="">Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="technical">Technical Support</option>
+                        <option value="billing">Billing Question</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="bug">Bug Report</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea name="message" class="form-control" rows="5" required placeholder="Please describe your inquiry in detail..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <div>
+                        <label style="margin-right: 1rem;">
+                            <input type="radio" name="priority" value="low" checked> Low
+                        </label>
+                        <label style="margin-right: 1rem;">
+                            <input type="radio" name="priority" value="medium"> Medium
+                        </label>
+                        <label>
+                            <input type="radio" name="priority" value="high"> High
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="card">
+        <h3><i class="fas fa-question-circle" style="color: #ffc107;"></i> Frequently Asked Questions</h3>
+        
+        <div style="margin-top: 1.5rem;">
+            <div style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4>Q: How do I reset my password?</h4>
+                <p>A: Click on "Forgot Password" on the login page and follow the instructions sent to your email.</p>
+            </div>
+            
+            <div style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4>Q: Can I access Smart Campus on mobile?</h4>
+                <p>A: Yes! Smart Campus is fully responsive and works on all mobile devices.</p>
+            </div>
+            
+            <div style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4>Q: How do I report a bug?</h4>
+                <p>A: Use the contact form above and select "Bug Report" as the subject. Please include detailed information about the issue.</p>
+            </div>
+            
+            <div style="padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+                <h4>Q: Is there a user guide available?</h4>
+                <p>A: Yes, comprehensive documentation is available in the help section of your dashboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Contact -->
+    <div class="card" style="background: #fff3cd; border-left: 4px solid #fd7e14;">
+        <h3><i class="fas fa-exclamation-triangle" style="color: #fd7e14;"></i> Emergency Support</h3>
+        <p>For urgent technical issues affecting campus operations, please call our emergency support line:</p>
+        <div style="text-align: center; margin: 1rem 0;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #dc3545;">
+                <i class="fas fa-phone"></i> +1 (555) EMERGENCY
+            </div>
+            <small style="color: #666;">Available 24/7 for critical system issues</small>
+        </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="card">
+        <h3><i class="fas fa-share-alt" style="color: #6f42c1;"></i> Follow Us</h3>
+        <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem;">
+            <a href="#" style="font-size: 2rem; color: #1877f2;">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="#" style="font-size: 2rem; color: #1da1f2;">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" style="font-size: 2rem; color: #0077b5;">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="#" style="font-size: 2rem; color: #e4405f;">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" style="font-size: 2rem; color: #ff0000;">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
+    </div>
+</div>

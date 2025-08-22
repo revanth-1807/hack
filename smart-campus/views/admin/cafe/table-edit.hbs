@@ -1,0 +1,99 @@
+<div class="card">
+    <h1>Edit Table: {{table.name}}</h1>
+
+    <form action="/admin/cafe/tables/update/{{table._id}}" method="POST">
+        <div class="form-group">
+            <label class="form-label">Table Number</label>
+            <input type="number" name="tableNumber" class="form-control" value="{{table.tableNumber}}" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Table Name/Identifier</label>
+            <input type="text" name="name" class="form-control" value="{{table.name}}" placeholder="e.g., Window Table, Corner Booth">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Capacity (Seats)</label>
+                <input type="number" name="capacity" class="form-control" value="{{table.capacity}}" min="1" required>
+            </div>
+
+            <极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录div class="form-group">
+                <label class="form-label">Table Type</label>
+                <select name="tableType" class="form-control" required>
+                    <option value="standard" {{#if (eq table.tableType 'standard')}}selected{{/if}}>Standard</option>
+                    <option value="booth" {{#if (eq table.tableType 'booth')}}selected{{/if}}>Booth</option>
+                    <option value="bar" {{#if (eq table.tableType 'bar')}}selected{{/if}}>Bar Table</option>
+                    <option value="outdoor" {{#if (eq table.tableType 'outdoor')}}selected{{/if}}>Outdoor</option>
+                    <option value="private" {{#if (eq table.tableType 'private')}}selected{{/if}}>Private Room</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control" value="{{table.location}}" placeholder="e.g., Main Hall, Near Window, Patio" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Additional details about the table...">{{table.description}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <select name="status" class极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录="form-control" required>
+                <option value="available" {{#if (eq table.status 'available')}}selected{{/if}}>Available</option>
+                <option value="occupied" {{#if (eq table.status 'occupied')}}selected{{/if}}>Occupied</option>
+                <option value="reserved" {{#if (eq table.status 'reserved')}}selected{{/if}}>Reserved</option>
+                <option value="cleaning" {{#if (eq table.status 'cleaning')}}selected{{/if}}>Cleaning</option>
+                <option value="maintenance" {{#if (eq table.status 'maintenance')}}selected{{/极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录if}}>Maintenance</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Features</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <label>
+                    <input type="checkbox" name="features" value="power_outlet" {{#if (includes table.features 'power_outlet')}}checked{{/if}}> Power Outlet
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="window_view" {{#if (includes table.features 'window_view')}}checked{{/if}}> Window View
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="wifi_strong" {{#if (includes table.features 'wifi_strong')}}checked{{/if}}> Strong WiFi
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="wheelchair" {{#if (includes table.features 'wheelchair')}}checked{{/if}}> Wheelchair Accessible
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="charging" {{#if (includes table.features 'charging')}}checked{{/if}}> Charging Station
+                </label>
+            </div>
+        </div>
+
+        <!-- Current Status Information -->
+        <div class="card" style="background: #f8f9fa; margin-bottom: 1rem;">
+            <h3>Current Status Information</h3>
+            <div style="color: #666;">
+                <div>Table Number: <strong>{{table.tableNumber}}</strong></div>
+                <div>Current Status: <span class="badge badge-{{#if (eq table.status 'available')}}success{{else if (eq table.status 'occupied')}}danger{{else if (eq table.status 'reserved')}}warning{{else}}secondary{{/if}}">{{table.status}}</span></div>
+                {{#if (eq table.status 'occupied')}}
+                <div>Occupied Since: {{formatDate table.occupiedSince 'MMM DD, YYYY HH:mm'}}</div>
+                {{/if}}
+                {{#if (eq table.status 'reserved')}}
+                <div>Reserved For: {{table.reservedFor}}</div>
+                <div>Reserved Time: {{formatDate table.reservedTime 'MMM DD, YYYY HH:mm'}}</div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Update Table</button>
+            <a href="/admin/cafe/tables" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

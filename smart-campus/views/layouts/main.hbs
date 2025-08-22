@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Smart Campus</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="logo">
+                    <i class="fas fa-graduation-cap"></i> Smart Campus
+                </a>
+                <ul class="nav-links">
+                    {{#if user}}
+                        <!-- Navigation for logged-in users with 4 main sectors -->
+                        <li><a href="/dashboard" class="{{#if (eq currentPage 'dashboard')}}active{{/if}}">Dashboard</a></li>
+                        
+                        <!-- Events Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="{{#if (eq currentPage 'events')}}active{{/if}}">Events</a>
+                            <div class="dropdown-content">
+                                <a href="/events">All Events</a>
+                                <a href="/events/my-events">My Events</a>
+                                <a href="/events/create">Create Event</a>
+                            </div>
+                        </li>
+                        
+                        <!-- Lost & Found Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="{{#if (eq currentPage 'lostfound')}}active{{/if}}">Lost & Found</a>
+                            <div class="dropdown-content">
+                                <a href="/lostfound">Browse Items</a>
+                                <a href="/lostfound/report">Report Item</a>
+                                <a href="/lostfound/my-items">My Items</a>
+                            </div>
+                        </li>
+                        
+                        <!-- Cafeteria Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="{{#if (eq currentPage 'cafeteria')}}active{{/if}}">Cafeteria</a>
+                            <div class="dropdown-content">
+                                <a href="/cafeteria">Menu</a>
+                                <a href="/cafeteria/orders">My Orders</a>
+                                <a href="/cafeteria/dashboard">Cafeteria Status</a>
+                            </div>
+                        </li>
+                        
+                        <!-- Navigation Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="{{#if (eq currentPage 'navigation')}}active{{/if}}">Navigation</a>
+                            <div class="dropdown-content">
+                                <a href="/navigation/map">Campus Map</a>
+                                <a href="/navigation/building">Buildings</a>
+                                <a href="/navigation/route">Get Directions</a>
+                            </div>
+                        </li>
+                        
+                        {{#if (eq user.role 'admin')}}
+                            <!-- Admin Dropdown -->
+                            <li class="dropdown">
+                                <a href="#" class="{{#if (eq currentPage 'admin')}}active{{/if}}">Admin</a>
+                                <div class="dropdown-content">
+                                    <a href="/admin/cafe">Cafeteria Admin</a>
+                                    <a href="/admin/navigation/buildings">Navigation Admin</a>
+                                </div>
+                            </li>
+                        {{/if}}
+                        
+                        <li><a href="/auth/profile">{{user.name}}</a></li>
+                        <li><a href="/auth/logout">Logout</a></li>
+                    {{else}}
+                        <!-- Navigation for non-logged-in users -->
+                        <li><a href="/" class="{{#if (eq currentPage 'home')}}active{{/if}}">Home</a></li>
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/auth/register">Register</a></li>
+                        <li><a href="/about" class="{{#if (eq currentPage 'about')}}active{{/if}}">About</a></li>
+                        <li><a href="/contact" class="{{#if (eq currentPage 'contact')}}active{{/if}}">Contact</a></li>
+                    {{/if}}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {{#if success_msg}}
+            <div class="flash-message success">
+                <i class="fas fa-check-circle"></i> {{success_msg}}
+            </div>
+        {{/if}}
+        {{#if error_msg}}
+            <div class="flash-message error">
+                <i class="fas fa-exclamation-circle"></i> {{error_msg}}
+            </div>
+        {{/if}}
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        {{{body}}}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: #333; color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container">
+            <div class="row">
+                <div style="grid-column: span 2;">
+                    <h3>Smart Campus Management System</h3>
+                    <p>Streamlining campus life with modern technology solutions.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul style="list-style: none;">
+                        <li><a href="/" style="color: white; text-decoration: none;">Home</a></li>
+                        <li><a href="/about" style="color: white; text-decoration: none;">About</a></li>
+                        <li><a href="/contact" style="color: white; text-decoration: none;">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Connect</h4>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: white; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin: 2rem 0; border-color: #555;">
+            <p style="text-align: center;">&copy; 2024 Smart Campus Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

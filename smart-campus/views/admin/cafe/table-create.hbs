@@ -1,0 +1,80 @@
+<div class="card">
+    <h1>Add Table</h1>
+
+    <form action="/admin/cafe/tables/create" method="POST">
+        <div class="form-group">
+            <label class="form-label">Table Number</label>
+            <input type="number" name="tableNumber" class="form-control" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Table Name/Identifier</label>
+            <input type="text" name="name" class="form-control" placeholder="e.g., Window Table, Corner Booth">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Capacity (Seats)</label>
+                <input type="number" name="capacity" class="form-control" min="1" value="4" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Table Type</label>
+                <select name="tableType" class="form-control" required>
+                    <option value="standard">Standard</option>
+                    <option value="booth">Booth</option>
+                    <option value="bar">Bar Table</option>
+                    <option value="outdoor">Outdoor</option>
+                    <option value="private">Private Room</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control" placeholder="e.g., Main Hall, Near Window, Patio" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Additional details about the table..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Initial Status</label>
+            <select name="status" class="form-control" required>
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+                <option value="reserved">Reserved</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="maintenance">Maintenance</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Features</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <label>
+                    <input type="checkbox" name="features" value="power_outlet"> Power Outlet
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="window_view"> Window View
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="wifi_strong"> Strong WiFi
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="wheelchair"> Wheelchair Accessible
+                </label>
+                <label>
+                    <input type="checkbox" name="features" value="charging"> Charging Station
+                </label>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Add Table</button>
+            <a href="/admin/cafe/tables" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

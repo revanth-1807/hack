@@ -1,0 +1,54 @@
+<h1>My Reported Items</h1>
+
+{{#if items.length}}
+<div class="row">
+    {{#each items}}
+    <div class="card">
+        <div style="display: flex; gap: 1rem; align-items: start;">
+            {{#if image}}
+            <img src="/uploads/{{image}}" alt="{{itemName}}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+            {{else}}
+            <div style="width: 100px; height: 100px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-question" style="font-size: 2rem; color: #999;"></i>
+            </div>
+            {{/if}}
+            <div style="flex: 1;">
+                <h3>{{itemName}}</h3>
+                <p>{{description}}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                    <div>
+                        <strong>Found:</strong> {{formatDate foundDate}}<br>
+                        <strong>Location:</strong> {{foundLocation}}<br>
+                        <strong>Status:</strong> 
+                        <span class="badge badge-{{#if (eq status 'found')}}info{{else if (eq status 'claimed')}}success{{else}}warning{{/if}}">
+                            {{status}}
+                        </span>
+                    </div>
+                    <div>
+                        <a href="/lostfound/{{_id}}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+                
+                {{#if claimedBy}}
+                <div style="margin-top: 1rem; padding: 0.5rem; background: #d4edda; border-radius: 5px;">
+                    <strong>Claimed by:</strong> {{claimedBy.name}}<br>
+                    <strong>Claim date:</strong> {{formatDate claimDate}}
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-search" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Items Reported</h3>
+    <p>You haven't reported any items to the lost and found yet.</p>
+    <a href="/lostfound/report" class="btn btn-primary">Report First Item</a>
+</div>
+{{/if}}
+
+<div style="margin-top: 2rem;">
+    <a href="/lostfound" class="btn btn-secondary">Back to Lost & Found</a>
+</div>

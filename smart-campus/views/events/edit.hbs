@@ -1,0 +1,70 @@
+<div class="card">
+    <h1>Edit Event</h1>
+
+    <form action="/events/edit/{{event._id}}" method="POST">
+        <div class="form-group">
+            <label class="form-label">Event Title</label>
+            <input type="text" name="title" class="form-control" value="{{event.title}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4" required>{{event.description}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-control" value="{{formatDate event.date 'YYYY-MM-DD'}}" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Time</label>
+                <input type="time" name="time" class="form-control" value="{{event.time}}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Venue</label>
+            <input type="text" name="venue" class="form-control" value="{{event.venue}}" required>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Organizer</label>
+            <input type="text" name="organizer" class="form-control" value="{{event.organizer}}" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control" required>
+                    <option value="academic" {{#if (eq event.category 'academic')}}selected{{/if}}>Academic</option>
+                    <option value="cultural" {{#if (eq event.category 'cultural')}}selected{{/if}}>Cultural</option>
+                    <option value="sports" {{#if (eq event.category 'sports')}}selected{{/if}}>Sports</option>
+                    <option value="technical" {{#if (eq event.category 'technical')}}selected{{/if}}>Technical</option>
+                    <option value="social" {{#if (eq event.category 'social')}}selected{{/if}}>Social</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Max Participants (0 for unlimited)</label>
+                <input type="number" name="maxParticipants" class="form-control" value="{{event.maxParticipants}}" min="0">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control" required>
+                <option value="upcoming" {{#if (eq event.status 'upcoming')}}selected{{/if}}>Upcoming</option>
+                <option value="ongoing" {{#if (eq event.status 'ongoing')}}selected{{/if}}>Ongoing</option>
+                <option value="completed" {{#if (eq event.status 'completed')}}selected{{/if}}>Completed</option>
+                <option value="cancelled" {{#if (eq event.status 'cancelled')}}selected{{/if}}>Cancelled</option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Update Event</button>
+            <a href="/events/{{event._id}}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

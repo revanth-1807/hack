@@ -1,0 +1,205 @@
+<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+    <h1>Inventory Management</h1>
+    <div>
+        <极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录>
+<a href="/admin/cafe" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="/admin/cafe/inventory/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Item
+        </a>
+    </div>
+</div>
+
+<!-- Filter and Search -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h3>Filter Inventory</h3>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+        <a href="/admin/cafe/inventory" class="btn btn-outline-primary {{#unless category}}active{{/unless}}">
+            All Items
+        </a>
+        <a href="/admin极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录>/cafe/inventory?category=food" class="btn btn-outline-success {{#if (eq category 'food')}}active{{/if}}">
+            Food
+        </a>
+        <a href="/admin/cafe/inventory?category=beverage" class="btn btn-outline-info {{#if (eq category 'beverage')}}active{{/if}}">
+            Beverages
+        </a>
+        <a href="/admin/cafe/inventory?category=supplies" class="btn btn-outline-warning {{#if (eq category 'supplies')}}active{{/if}}">
+            Supplies
+        </a>
+        <a href="/admin/cafe/inventory?category=equipment" class="btn btn-outline-secondary {{#if (eq category 'equipment')}}active{{/if}}">
+            Equipment
+        </a>
+        
+        <div style="margin-left: auto;">
+            <form action="/admin/cafe/inventory" method="GET" style="display: flex; gap: 0.5rem;">
+                <input type="text" name="search" class="form-control" placeholder="Search items..." value="{{search}}">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{#if items.length}}
+<div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录8f9fa;">
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Item Name</th>
+                <th style="padding: 1rem; text-align: left; border-bottom极速赛车开奖结果极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录历史记录: 2px solid #dee2e6;">Category</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Current Stock</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Min Stock</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Unit</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Status</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Last Updated</th>
+                <th style="padding: 1rem; text-align: left; border-bottom: 2极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录px solid #dee2e6;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each items}}
+            <tr class="{{#if (lt currentStock minStock)}}table-danger{{/if}}">
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <strong>{{name}}</strong>
+                    {{#if description}}<br><small style="color: #666;">{{description}}</small>{{/if}}
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <span class="badge badge-{{#if (eq category 'food')}}success{{else if (eq category 'beverage')}}info{{else if (eq category 'supplies')}}warning{{else}}secondary{{/if}}">
+                        {{category}}
+                    </span>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <strong style="font-size: 1.1em; {{#if (lt currentStock minStock)}}color: #dc3545;{{/if}}">
+                        {{currentStock}}
+                    </strong>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">{{minStock}}</td>
+                <td style="padding: 1rem; border-bottom: 极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录1px solid #dee2e6;">{{unit}}</td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    {{#if (lt currentStock minStock)}}
+                    <span class="badge badge-danger">Low Stock</span>
+                    {{else if (eq currentStock 0)}}
+                    <span class="badge badge-secondary">Out of Stock</span>
+                    {{else}}
+                    <span class="badge badge-success">In Stock</span>
+                    {{/if}}
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    {{formatDate updatedAt 'MMM DD'}}<br>
+                    <small style="color: #666;">{{formatDate updatedAt 'HH:mm'}}</small>
+                </td>
+                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#restockModal{{_id}}">
+                            <i class="fas fa-box-open"></i> Restock
+                        </button>
+                        <a href="/admin/cafe/inventory/edit/{{_id}}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Restock Modal -->
+            <div class="modal" id="restockModal{{_id}}" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
+                <div style="background: white; margin: 15% auto; padding: 2rem; border-radius: 8px; width: 400px;">
+                    <h3>Restock {{name}}</h3>
+                    <form action="/admin/cafe/inventory/restock/{{_id}}" method="POST">
+                        <div class="form-group">
+                            <label class="form-label">Quantity to Add</label>
+                            <input type="number" name="quantity" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Supplier (optional)</label>
+                            <input type="text" name="supplier" class="form-control">
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" class="btn btn-primary">Confirm Restock</button>
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('restockModal{{_id}}').style.display='none'">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+{{else}}
+<div class="card" style="text-align: center; padding: 3rem;">
+    <i class="fas fa-boxes" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>
+    <h3>No Inventory Items</h3>
+    <p>No inventory items found for the selected criteria.</p>
+    <a href="/admin/cafe/inventory/create" class="btn btn-primary">Add First Item</a>
+</div>
+{{/if}}
+
+<!-- Inventory Statistics -->
+<div class="card" style="margin-top: 2rem;">
+    <h3>Inventory Overview</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="text-align: center; padding: 1rem; background: #e7f3ff; border-radius: 5px;">
+            <i class="fas fa-boxes" style="font-size: 2rem; color: #007bff;"></i>
+            <h4>Total Items</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.totalItems}}</div>
+        </div>
+        <div style="text-align: center极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录; padding: 1rem; background: #e7f8e7; border-radius: 5px;">
+            <i class="fas fa-check-circle" style="font-size: 2rem; color: #28a745;"></i>
+            <h4>In Stock</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.inStockItems}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 极速赛车开奖结果历史记录
+极速赛车极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录开奖结果历史记录5px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #fd7e14;"></i>
+            <h4>Low Stock</h4>
+            <div style="font-size: 2rem; font-weight: bold;">{{stats.lowStockItems}}</div>
+        </div>
+        <div style="text-align: center; padding: 1rem; background: #f8d7da; border-radius: 5px;">
+            <i class="fas fa-times-circle" style="font-size: 2rem; color: #dc354极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录5;"></i>
+            <h4>Out of Stock</h4>
+           极速赛车开奖结果历史记录
+极速赛车开奖结果历史记录 <div style="font-size: 2rem; font-weight: bold;">{{stats.outOfStockItems}}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Low Stock Alert -->
+{{#if stats.lowStockItems}}
+<div class="card" style="background: #fff3cd; border-left: 4px solid #fd7e14; margin-top: 2rem;">
+    <h3>⚠️ Low Stock Alert</h3>
+    <p>{{stats.lowStockItems}} item(s) are below minimum stock levels and need restocking.</p>
+    <a href="/admin/cafe/inventory?lowstock=true" class="btn btn-warning">View Low Stock Items</a>
+</div>
+{{/if}}
+
+<script>
+// Simple modal functionality
+document.addEventListener('click', function(e) {
+    if (e.target.hasAttribute('data-toggle') && e.target.getAttribute('data-toggle') === 'modal') {
+        const modalId = e.target.getAttribute('data-target');
+        document.getElementById(modalId.replace('#', '')).style.display = 'block';
+    }
+    
+    if (e.target.classList.contains('modal') || e.target.classList.contains('btn-secondary')) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => modal.style.display = 'none');
+    }
+});
+</script>
+
+<style>
+.table-danger {
+    background: #f8d7da;
+}
+
+.modal {
+    display: none;
+}
+</style>
