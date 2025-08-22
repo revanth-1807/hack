@@ -3,6 +3,7 @@ const router = express.Router();
 const {
     getAdminDashboard,
     getMenuManagement,
+    renderMenuCreate,
     createMenuItem,
     updateMenuItem,
     deleteMenuItem,
@@ -23,6 +24,7 @@ router.get('/', isAuthenticated, isAdmin, getAdminDashboard);
 
 // Menu management
 router.get('/menu', isAuthenticated, isAdmin, getMenuManagement);
+router.get('/menu/create', isAuthenticated, isAdmin, renderMenuCreate);
 router.post('/menu/create', isAuthenticated, isAdmin, createMenuItem);
 router.post('/menu/update/:id', isAuthenticated, isAdmin, updateMenuItem);
 router.post('/menu/delete/:id', isAuthenticated, isAdmin, deleteMenuItem);

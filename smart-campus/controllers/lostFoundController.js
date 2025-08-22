@@ -5,29 +5,24 @@ const User = require('../models/User');
 const getAllLostItems = async (req, res) => {
     try {
         const { category, status } = req.query;
-        
         let query = {};
-        
-        if (category && category !== 'all') {
-            query.category = category;
-        }
-        
-        if (status && status !== 'all') {
-            query.status = status;
-        }
+
+        if (category && category !== 'all') query.category = category;
+        if (status && status !== 'all') query.status = status;
 
         const items = await LostItem.find(query)
             .populate('foundBy', 'name email')
             .populate('claimedBy', 'name email')
-            .sort({ dateFound: -1 });
+            .sort({ dateFound: -1 })
+            .lean(); // ✅ FIX: makes docs plain objects
 
         res.render('lostfound/index', {
             title: 'Lost & Found',
             items,
             categories: ['electronics', 'books', 'clothing', 'accessories', 'documents', 'other'],
             statuses: ['found', 'claimed', 'archived'],
-            selectedCategory: category,
-            selectedStatus: status,
+            selectedCategory: category || 'all',
+            selectedStatus: status || 'all',
             currentPage: 'lostfound'
         });
     } catch (error) {
@@ -42,7 +37,8 @@ const getLostItemDetails = async (req, res) => {
     try {
         const item = await LostItem.findById(req.params.id)
             .populate('foundBy', 'name email phone')
-            .populate('claimedBy', 'name email phone');
+            .populate('claimedBy', 'name email phone')
+            .lean(); // ✅ FIX
 
         if (!item) {
             req.flash('error_msg', 'Item not found');
@@ -61,18 +57,25 @@ const getLostItemDetails = async (req, res) => {
     }
 };
 
-// Render report lost item form
+// Render report form
 const renderReportItem = (req, res) => {
     res.render('lostfound/report', {
         title: 'Report Found Item',
-        currentPage: 'lostfound'
+        currentPage: 'lostfound',
+        user: req.session.user
     });
 };
 
 // Report found item
 const reportFoundItem = async (req, res) => {
     try {
-        const { itemName, description, category, locationFound, timeFound } = req.body;
+        const { itemName, description, category, locationFound, dateFound, timeFound, foundByName, foundByPhone, foundByEmail } = req.body;
+
+        // ✅ validation before creating doc
+        if (!itemName || !description || !category || !locationFound) {
+            req.flash('error_msg', 'All required fields must be filled');
+            return res.redirect('/lostfound/report');
+        }
 
         const user = await User.findById(req.session.user._id);
 
@@ -81,16 +84,17 @@ const reportFoundItem = async (req, res) => {
             description,
             category,
             locationFound,
+            dateFound,
             timeFound,
             foundBy: user._id,
-            foundByName: user.name,
-            foundByPhone: user.phone || '',
-            foundByEmail: user.email
+            foundByName: foundByName || user.name,
+            foundByPhone: foundByPhone || user.phone || '',
+            foundByEmail: foundByEmail || user.email
         });
 
         await newItem.save();
 
-        req.flash('success_msg', 'Item reported successfully. A verification code has been generated.');
+        req.flash('success_msg', `Item reported successfully! Verification Code: ${newItem.verificationCode}`);
         res.redirect('/lostfound');
     } catch (error) {
         console.error('Report item error:', error);
@@ -99,26 +103,20 @@ const reportFoundItem = async (req, res) => {
     }
 };
 
-// Render claim item form
+// Render claim form
 const renderClaimItem = async (req, res) => {
     try {
-        const item = await LostItem.findById(req.params.id);
-
+        const item = await LostItem.findById(req.params.id).lean(); // ✅ FIX
         if (!item) {
             req.flash('error_msg', 'Item not found');
             return res.redirect('/lostfound');
         }
-
         if (item.status !== 'found') {
             req.flash('error_msg', 'This item is no longer available for claim');
             return res.redirect('/lostfound');
         }
 
-        res.render('lostfound/claim', {
-            title: 'Claim Item',
-            item,
-            currentPage: 'lostfound'
-        });
+        res.render('lostfound/claim', { title: 'Claim Item', item, currentPage: 'lostfound' });
     } catch (error) {
         console.error('Render claim form error:', error);
         req.flash('error_msg', 'Error loading claim form');
@@ -130,23 +128,18 @@ const renderClaimItem = async (req, res) => {
 const claimItem = async (req, res) => {
     try {
         const { verificationCode, contactPhone, contactEmail } = req.body;
-        const itemId = req.params.id;
-
-        const item = await LostItem.findById(itemId);
-        
+        const item = await LostItem.findById(req.params.id);
         if (!item) {
             req.flash('error_msg', 'Item not found');
             return res.redirect('/lostfound');
         }
-
         if (item.status !== 'found') {
             req.flash('error_msg', 'This item is no longer available for claim');
             return res.redirect('/lostfound');
         }
-
         if (item.verificationCode !== verificationCode.toUpperCase()) {
             req.flash('error_msg', 'Invalid verification code');
-            return res.redirect(`/lostfound/claim/${itemId}`);
+            return res.redirect(`/lostfound/claim/${req.params.id}`);
         }
 
         const user = await User.findById(req.session.user._id);
@@ -161,7 +154,7 @@ const claimItem = async (req, res) => {
 
         await item.save();
 
-        req.flash('success_msg', 'Item claimed successfully! The owner will contact you soon.');
+        req.flash('success_msg', 'Item claimed successfully! The finder will contact you soon.');
         res.redirect('/lostfound');
     } catch (error) {
         console.error('Claim item error:', error);
@@ -174,12 +167,14 @@ const claimItem = async (req, res) => {
 const updateItemStatus = async (req, res) => {
     try {
         const { status } = req.body;
+        const item = await LostItem.findByIdAndUpdate(req.params.id, { status }, { new: true }).lean(); // ✅ FIX
 
-        await LostItem.findByIdAndUpdate(req.params.id, {
-            status
-        });
+        if (!item) {
+            req.flash('error_msg', 'Item not found');
+            return res.redirect('/lostfound');
+        }
 
-        req.flash('success_msg', 'Item status updated successfully');
+        req.flash('success_msg', `Item status updated to "${status}"`);
         res.redirect('/lostfound');
     } catch (error) {
         console.error('Update item status error:', error);
@@ -191,8 +186,11 @@ const updateItemStatus = async (req, res) => {
 // Admin: Delete item
 const deleteItem = async (req, res) => {
     try {
-        await LostItem.findByIdAndDelete(req.params.id);
-
+        const item = await LostItem.findByIdAndDelete(req.params.id).lean(); // ✅ FIX
+        if (!item) {
+            req.flash('error_msg', 'Item not found');
+            return res.redirect('/lostfound');
+        }
         req.flash('success_msg', 'Item deleted successfully');
         res.redirect('/lostfound');
     } catch (error) {
@@ -207,7 +205,8 @@ const getMyReportedItems = async (req, res) => {
     try {
         const items = await LostItem.find({ foundBy: req.session.user._id })
             .populate('claimedBy', 'name email')
-            .sort({ dateFound: -1 });
+            .sort({ dateFound: -1 })
+            .lean(); // ✅ FIX
 
         res.render('lostfound/my-items', {
             title: 'My Reported Items',

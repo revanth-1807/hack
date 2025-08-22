@@ -69,6 +69,14 @@ const getMenuManagement = async (req, res) => {
     }
 };
 
+// Render menu creation form
+const renderMenuCreate = (req, res) => {
+    res.render('cafe-admin/menu-create', {
+        title: 'Add Menu Item',
+        currentPage: 'admin'
+    });
+};
+
 // Create menu item
 const createMenuItem = async (req, res) => {
     try {
@@ -452,6 +460,7 @@ const getReports = async (req, res) => {
 module.exports = {
     getAdminDashboard,
     getMenuManagement,
+    renderMenuCreate,
     createMenuItem,
     updateMenuItem,
     deleteMenuItem,

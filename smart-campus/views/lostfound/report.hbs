@@ -15,7 +15,7 @@
         <div class="row">
             <div class="form-group">
                 <label class="form-label">Found Date</label>
-                <input type="date" name="foundDate" class="form-control" required>
+                <input type="date" name="dateFound" class="form-control" required>
             </div>
 
             <div class="form-group">
@@ -34,7 +34,7 @@
 
         <div class="form-group">
             <label class="form-label">Found Location</label>
-            <input type="text" name="foundLocation" class="form-control" required placeholder="e.g., Library, Cafeteria, Building A">
+            <input type="text" name="locationFound" class="form-control" required placeholder="e.g., Library, Cafeteria, Building A">
         </div>
 
         <div class="form-group">
@@ -43,9 +43,18 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">Contact Information</label>
-            <input type="text" name="contactInfo" class="form-control" required value="{{user.phone}}">
-            <small class="form-text">Phone number or email where you can be reached</small>
+            <label class="form-label">Your Name</label>
+            <input type="text" name="foundByName" class="form-control" required value="{{user.name}}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Your Phone</label>
+            <input type="text" name="foundByPhone" class="form-control" required value="{{user.phone}}">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Your Email</label>
+            <input type="email" name="foundByEmail" class="form-control" required value="{{user.email}}">
         </div>
 
         <div style="display: flex; gap: 1rem; margin-top: 2rem;">

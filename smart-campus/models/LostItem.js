@@ -24,10 +24,11 @@ const lostItemSchema = new mongoose.Schema({
         default: Date.now
     },
     timeFound: {
-        type: String
+        type: String,
+        default: ''
     },
     image: {
-        type: String, // URL to image
+        type: String, // file path or URL
         default: ''
     },
     status: {
@@ -40,34 +41,16 @@ const lostItemSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    foundByName: {
-        type: String,
-        required: true
-    },
-    foundByPhone: {
-        type: String,
-        required: true
-    },
-    foundByEmail: {
-        type: String,
-        required: true
-    },
-    claimedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    claimedByName: {
-        type: String
-    },
-    claimedByPhone: {
-        type: String
-    },
-    claimedByEmail: {
-        type: String
-    },
-    claimDate: {
-        type: Date
-    },
+    foundByName: { type: String, required: true },
+    foundByPhone: { type: String, required: true },
+    foundByEmail: { type: String, required: true },
+
+    claimedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    claimedByName: String,
+    claimedByPhone: String,
+    claimedByEmail: String,
+    claimDate: Date,
+
     verificationCode: {
         type: String,
         unique: true
@@ -75,27 +58,18 @@ const lostItemSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
-});
-
-// Update timestamp before saving
-lostItemSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
-    next();
-});
+}, { timestamps: true });
 
 // Generate verification code before saving
-lostItemSchema.pre('save', function(next) {
+lostItemSchema.pre('save', async function (next) {
     if (this.isNew && !this.verificationCode) {
-        this.verificationCode = Math.random().toString(36).substr(2, 8).toUpperCase();
+        let code, exists = true;
+        while (exists) {
+            code = Math.random().toString(36).substr(2, 8).toUpperCase();
+            exists = await mongoose.models.LostItem.findOne({ verificationCode: code });
+        }
+        this.verificationCode = code;
     }
     next();
 });

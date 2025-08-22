@@ -28,6 +28,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
 }));
+app.use('/uploads', express.static('uploads'));
 app.use(flash());
 
 // Global variables
@@ -46,8 +47,67 @@ app.engine('hbs', exphbs.engine({
     partialsDir: path.join(__dirname, 'views/partials'),
     helpers: {
         eq: function (a, b) { return a === b; },
-        formatDate: function (date) {
-            return new Date(date).toLocaleDateString();
+        formatDate: function (date, format) {
+            const d = new Date(date);
+            
+            if (format === 'YYYY-MM-DD') {
+                // Format for HTML date input (YYYY-MM-DD)
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            } else if (format === 'HH:mm') {
+                // Format for HTML time input (HH:mm)
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            } else {
+                // Default format for display
+                return d.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    timeZone: 'UTC' // Use UTC to avoid timezone issues
+                });
+            }
+        },
+        gt: function (a, b) { return a > b; },
+        gte: function (a, b) { return a >= b; },
+        range: function (start, end) {
+            const result = [];
+            for (let i = start; i <= end; i++) {
+                result.push(i);
+            }
+            return result;
+        },
+        getMonthName: function(month) {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            return months[month - 1] || 'Unknown';
+        },
+        getEventsForMonth: function(events, month, year) {
+            const targetMonth = parseInt(month);
+            const targetYear = parseInt(year);
+            
+            return events.filter(event => {
+                const eventDate = new Date(event.startDate);
+                return eventDate.getMonth() + 1 === targetMonth && eventDate.getFullYear() === targetYear;
+            });
+        },
+        getEventColor: function(type) {
+            const colors = {
+                'academic': '#007bff',
+                'holiday': '#28a745',
+                'exam': '#dc3545',
+                'event': '#ffc107',
+                'other': '#6c757d'
+            };
+            return colors[type] || '#6c757d';
+        },
+        ne: function(a, b) {
+            return a !== b;
         }
     }
 }));

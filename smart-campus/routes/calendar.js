@@ -16,8 +16,8 @@ const { isAuthenticated, isAdmin } = require('../middleware/auth');
 // Get calendar events
 router.get('/', getCalendarEvents);
 
-// Yearly calendar management (admin only)
-router.get('/yearly', isAuthenticated, isAdmin, getYearlyCalendar);
+// Yearly calendar management (authenticated users only)
+router.get('/yearly', isAuthenticated, getYearlyCalendar);
 
 // Create calendar event (admin only)
 router.get('/create', isAuthenticated, isAdmin, renderCreateCalendarEvent);

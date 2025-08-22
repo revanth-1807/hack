@@ -60,6 +60,9 @@
                             </div>
                         </li>
                         
+                        <!-- Yearly Calendar Link for all logged-in users -->
+                        <li><a href="/calendar/yearly" class="{{#if (eq currentPage 'calendar')}}active{{/if}}">Yearly Calendar</a></li>
+                        
                         {{#if (eq user.role 'admin')}}
                             <!-- Admin Dropdown -->
                             <li class="dropdown">

@@ -4,15 +4,41 @@ const Registration = require('../models/Registration');
 // Get all events
 const getAllEvents = async (req, res) => {
     try {
+        const { view } = req.query;
         const events = await Event.find()
             .populate('createdBy', 'name email')
-            .sort({ date: 1 });
+            .sort({ date: 1 })
+            .lean(); // ✅ plain objects
         
-        res.render('events/index', { 
-            title: 'Events', 
-            events,
-            currentPage: 'events'
-        });
+        if (view === 'calendar') {
+            // Format events for calendar display
+            const calendarEvents = events.map(event => ({
+                id: event._id,
+                title: event.title,
+                start: new Date(`${event.date}T${event.time}`),
+                end: new Date(new Date(`${event.date}T${event.time}`).getTime() + 2 * 60 * 60 * 1000), // 2 hours duration
+                description: event.description,
+                venue: event.venue,
+                organizer: event.organizer,
+                category: event.category,
+                status: event.status
+            }));
+
+            res.render('events/index', { 
+                title: 'Events Calendar', 
+                events,
+                calendarEvents: JSON.stringify(calendarEvents),
+                view: 'calendar',
+                currentPage: 'events'
+            });
+        } else {
+            res.render('events/index', { 
+                title: 'Events', 
+                events,
+                view: 'list',
+                currentPage: 'events'
+            });
+        }
     } catch (error) {
         console.error('Get events error:', error);
         req.flash('error_msg', 'Error loading events');
@@ -24,7 +50,8 @@ const getAllEvents = async (req, res) => {
 const getEventDetails = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id)
-            .populate('createdBy', 'name email');
+            .populate('createdBy', 'name email')
+            .lean(); // ✅ plain object
         
         if (!event) {
             req.flash('error_msg', 'Event not found');
@@ -37,7 +64,7 @@ const getEventDetails = async (req, res) => {
             const registration = await Registration.findOne({
                 event: event._id,
                 user: req.session.user._id
-            });
+            }).lean(); // ✅ plain object
             isRegistered = !!registration;
         }
 
@@ -93,7 +120,7 @@ const createEvent = async (req, res) => {
 // Render edit event form (admin only)
 const renderEditEvent = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const event = await Event.findById(req.params.id).lean(); // ✅ plain object
         
         if (!event) {
             req.flash('error_msg', 'Event not found');
@@ -158,7 +185,7 @@ const deleteEvent = async (req, res) => {
 const registerForEvent = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
-        
+
         if (!event) {
             req.flash('error_msg', 'Event not found');
             return res.redirect('/events');
@@ -212,7 +239,7 @@ const cancelRegistration = async (req, res) => {
         const registration = await Registration.findOne({
             event: req.params.id,
             user: req.session.user._id
-        });
+        }).lean(); // ✅ plain object
 
         if (!registration) {
             req.flash('error_msg', 'Registration not found');
@@ -245,7 +272,8 @@ const getMyEvents = async (req, res) => {
                 path: 'event',
                 populate: { path: 'createdBy', select: 'name email' }
             })
-            .sort({ registrationDate: -1 });
+            .sort({ registrationDate: -1 })
+            .lean(); // ✅ plain objects
 
         res.render('events/my-events', { 
             title: 'My Events', 

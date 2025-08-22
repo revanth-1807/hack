@@ -1,13 +1,51 @@
-<div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h1>Events</h1>
-    {{#if (eq user.role 'admin')}}
-    <a href="/events/create" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Create Event
-    </a>
-    {{/if}}
+    <div>
+        <a href="/events?view=calendar" class="btn btn-secondary">Calendar View</a>
+        {{#if (eq user.role 'admin')}}
+        <a href="/events/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create Event
+        </a>
+        {{/if}}
+    </div>
 </div>
 
 {{#if events.length}}
+{{#if (eq view 'calendar')}}
+<!-- Calendar View -->
+<div id="calendar" style="height: 600px;"></div>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendarEvents = {{{calendarEvents}}};
+    
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: calendarEvents,
+      eventClick: function(info) {
+        window.location.href = '/events/' + info.event.id;
+      },
+      eventContent: function(arg) {
+        return {
+          html: `<div style="padding: 2px;">
+            <strong>${arg.event.title}</strong><br>
+            <small>${arg.event.extendedProps.venue}</small>
+          </div>`
+        };
+      }
+    });
+    
+    calendar.render();
+  });
+</script>
+{{else}}
+<!-- List View -->
 <div class="row">
     {{#each events}}
     <div class="card event-card event-{{status}}">
@@ -31,7 +69,7 @@
             <a href="/events/{{_id}}" class="btn btn-primary">View Details</a>
             {{#if (eq ../user.role 'admin')}}
             <a href="/events/edit/{{_id}}" class="btn btn-secondary">Edit</a>
-            <form action="/events/delete/{{_id}}" method="POST" style="display: inline;">
+            <form action="/events/delete/{{this._id}}" method="POST" style="display: inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
             </form>
             {{/if}}
@@ -39,6 +77,7 @@
     </div>
     {{/each}}
 </div>
+{{/if}}
 {{else}}
 <div class="card" style="text-align: center; padding: 3rem;">
     <i class="fas fa-calendar-times" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>

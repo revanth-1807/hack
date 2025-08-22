@@ -17,7 +17,8 @@ const getCalendarEvents = async (req, res) => {
 
         const events = await CalendarEvent.find(query)
             .populate('createdBy', 'name email')
-            .sort({ startDate: 1 });
+            .sort({ startDate: 1 })
+            .lean();   // ✅ convert to plain JS objects
 
         // Get unique academic years and semesters for filter
         const academicYears = await CalendarEvent.distinct('academicYear');
@@ -89,7 +90,7 @@ const createCalendarEvent = async (req, res) => {
 // Render edit calendar event form (admin only)
 const renderEditCalendarEvent = async (req, res) => {
     try {
-        const event = await CalendarEvent.findById(req.params.id);
+        const event = await CalendarEvent.findById(req.params.id).lean(); // ✅ added .lean()
         
         if (!event) {
             req.flash('error_msg', 'Calendar event not found');
@@ -177,7 +178,8 @@ const getCalendarEventsApi = async (req, res) => {
 
         const events = await CalendarEvent.find(query)
             .select('title description startDate endDate type academicYear semester')
-            .sort({ startDate: 1 });
+            .sort({ startDate: 1 })
+            .lean();   // ✅ added .lean()
 
         res.json({
             success: true,
@@ -204,7 +206,8 @@ const getUpcomingEvents = async (req, res) => {
         })
         .select('title startDate endDate type')
         .sort({ startDate: 1 })
-        .limit(5);
+        .limit(5)
+        .lean();  // ✅ added .lean()
 
         res.json({
             success: true,
@@ -243,7 +246,8 @@ const getYearlyCalendar = async (req, res) => {
             ]
         })
         .populate('createdBy', 'name email')
-        .sort({ startDate: 1 });
+        .sort({ startDate: 1 })
+        .lean();   // ✅ added .lean()
 
         // Get available years for dropdown
         const years = await CalendarEvent.aggregate([
