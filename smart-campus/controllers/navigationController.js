@@ -1,4 +1,5 @@
 const Building = require('../models/Building');
+const leafletConfig = require('../config/google-maps');
 
 // Get campus map
 const getCampusMap = async (req, res) => {
@@ -6,9 +7,37 @@ const getCampusMap = async (req, res) => {
         const buildings = await Building.find({ isActive: true })
             .sort({ name: 1 });
 
+        // Calculate center point of all buildings for map focus
+        let centerLat = leafletConfig.defaultCenter.lat;
+        let centerLng = leafletConfig.defaultCenter.lng;
+        
+        if (buildings.length > 0) {
+            const totalLat = buildings.reduce((sum, building) => sum + building.coordinates.latitude, 0);
+            const totalLng = buildings.reduce((sum, building) => sum + building.coordinates.longitude, 0);
+            centerLat = totalLat / buildings.length;
+            centerLng = totalLng / buildings.length;
+        }
+
+        // Prepare building data for Leaflet
+        const buildingData = buildings.map(building => ({
+            id: building._id,
+            name: building.name,
+            code: building.code,
+            category: building.category,
+            coordinates: {
+                lat: building.coordinates.latitude,
+                lng: building.coordinates.longitude
+            },
+            address: building.address,
+            description: building.description
+        }));
+
         res.render('navigation/map', {
             title: 'Campus Map',
             buildings,
+            buildingData: JSON.stringify(buildingData),
+            mapCenter: { lat: centerLat, lng: centerLng },
+            mapZoom: leafletConfig.defaultZoom,
             currentPage: 'navigation'
         });
     } catch (error) {
