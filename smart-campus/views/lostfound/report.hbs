@@ -1,63 +1,75 @@
-<div class="card">
-    <h1>Report Found Item</h1>
+<div class="card p-4 shadow-sm">
+    <h1 class="mb-4">Report Found Item</h1>
 
     <form action="/lostfound/report" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
+        <!-- Item Name -->
+        <div class="form-group mb-3">
             <label class="form-label">Item Name</label>
             <input type="text" name="itemName" class="form-control" required>
         </div>
 
-        <div class="form-group">
+        <!-- Description -->
+        <div class="form-group mb-3">
             <label class="form-label">Description</label>
             <textarea name="description" class="form-control" rows="4" required></textarea>
         </div>
 
-        <div class="row">
-            <div class="form-group">
+        <!-- Found Date & Time -->
+        <div class="row mb-3">
+            <div class="col">
                 <label class="form-label">Found Date</label>
                 <input type="date" name="dateFound" class="form-control" required>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">Category</label>
-                <select name="category" class="form-control" required>
-                    <option value="">Select Category</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="books">Books & Stationery</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="documents">Documents</option>
-                    <option value="other">Other</option>
-                </select>
+            <div class="col">
+                <label class="form-label">Found Time</label>
+                <input type="time" name="timeFound" class="form-control">
             </div>
         </div>
 
-        <div class="form-group">
+        <!-- Category -->
+        <div class="form-group mb-3">
+            <label class="form-label">Category</label>
+            <select name="category" class="form-control" required>
+                <option value="">Select Category</option>
+                <option value="electronics">Electronics</option>
+                <option value="clothing">Clothing</option>
+                <option value="books">Books & Stationery</option>
+                <option value="accessories">Accessories</option>
+                <option value="documents">Documents</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <!-- Location Found -->
+        <div class="form-group mb-3">
             <label class="form-label">Found Location</label>
             <input type="text" name="locationFound" class="form-control" required placeholder="e.g., Library, Cafeteria, Building A">
         </div>
 
-        <div class="form-group">
+        <!-- Image Upload -->
+        <div class="form-group mb-3">
             <label class="form-label">Item Image (optional)</label>
             <input type="file" name="image" class="form-control" accept="image/*">
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Your Name</label>
-            <input type="text" name="foundByName" class="form-control" required value="{{user.name}}">
+        <!-- Reporter Details -->
+        <div class="form-group mb-3">
+            <label class="form-label">Reporter Name</label>
+            <input type="text" name="reporterName" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Your Phone</label>
-            <input type="text" name="foundByPhone" class="form-control" required value="{{user.phone}}">
+        <div class="form-group mb-3">
+            <label class="form-label">Reporter Phone</label>
+            <input type="text" name="reporterPhone" class="form-control" required>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Your Email</label>
-            <input type="email" name="foundByEmail" class="form-control" required value="{{user.email}}">
+        <div class="form-group mb-3">
+            <label class="form-label">Reporter Email</label>
+            <input type="email" name="reporterEmail" class="form-control" required>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <!-- Submit Buttons -->
+        <div class="d-flex gap-3 mt-4">
             <button type="submit" class="btn btn-primary">Report Item</button>
             <a href="/lostfound" class="btn btn-secondary">Cancel</a>
         </div>

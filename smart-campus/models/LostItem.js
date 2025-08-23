@@ -36,15 +36,18 @@ const lostItemSchema = new mongoose.Schema({
         enum: ['found', 'claimed', 'archived'],
         default: 'found'
     },
+
+    // Reporter details
     foundBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    foundByName: { type: String, required: true },
-    foundByPhone: { type: String, required: true },
-    foundByEmail: { type: String, required: true },
+    reporterName: { type: String, required: true },
+    reporterPhone: { type: String, required: true },
+    reporterEmail: { type: String, required: true },
 
+    // Claimer details
     claimedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     claimedByName: String,
     claimedByPhone: String,

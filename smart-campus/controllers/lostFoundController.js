@@ -69,13 +69,17 @@ const renderReportItem = (req, res) => {
 // Report found item
 const reportFoundItem = async (req, res) => {
     try {
-        const { itemName, description, category, locationFound, dateFound, timeFound, foundByName, foundByPhone, foundByEmail } = req.body;
-
-        // ✅ validation before creating doc
-        if (!itemName || !description || !category || !locationFound) {
-            req.flash('error_msg', 'All required fields must be filled');
-            return res.redirect('/lostfound/report');
-        }
+        const {
+            itemName,
+            description,
+            category,
+            locationFound,
+            dateFound,
+            timeFound,
+            reporterName,
+            reporterPhone,
+            reporterEmail
+        } = req.body;
 
         const user = await User.findById(req.session.user._id);
 
@@ -85,11 +89,11 @@ const reportFoundItem = async (req, res) => {
             category,
             locationFound,
             dateFound,
-            timeFound,
+            timeFound: timeFound || '',
             foundBy: user._id,
-            foundByName: foundByName || user.name,
-            foundByPhone: foundByPhone || user.phone || '',
-            foundByEmail: foundByEmail || user.email
+            foundByName: reporterName || user.name,
+            foundByPhone: reporterPhone || user.phone || '',
+            foundByEmail: reporterEmail || user.email
         });
 
         await newItem.save();
@@ -98,10 +102,12 @@ const reportFoundItem = async (req, res) => {
         res.redirect('/lostfound');
     } catch (error) {
         console.error('Report item error:', error);
-        req.flash('error_msg', 'Error reporting item');
+        req.flash('error_msg', 'Error reporting item. Please try again.');
         res.redirect('/lostfound/report');
     }
 };
+
+
 
 // Render claim form
 const renderClaimItem = async (req, res) => {
